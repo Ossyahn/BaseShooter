@@ -3,14 +3,24 @@
 
 #include "ChooseNextWaypoint.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "AIController.h"
+//#include "PatrollingGuard.h"
+
 
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {	
-	auto BlackboardComp = OwnerComp.GetBlackboardComponent();
-	int IndexVal = BlackboardComp->GetValueAsInt(IndexKey.SelectedKeyName);
+	auto Blackboard = OwnerComp.GetBlackboardComponent();
+	if (!Blackboard) return EBTNodeResult::Failed;
 
-	UE_LOG(LogTemp, Warning, TEXT("Waypoint index: %i"), IndexVal);
+	int Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
+
+	auto Pawn = OwnerComp.GetAIOwner()->GetPawn();
+	//APatrollingGuard* Guard = Cast<APatrollingGuard>(Pawn);
+	//TArray<AActor> Waypoints = Guard->
+
+	//UE_LOG(LogTemp, Warning, TEXT("Waypoint index: %i"), Index);
 
 
 	return EBTNodeResult::Succeeded;
 }
+
