@@ -12,16 +12,17 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& Own
 	auto Blackboard = OwnerComp.GetBlackboardComponent();
 	if (!Blackboard) return EBTNodeResult::Failed;
 
-	int Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
-
 	auto Pawn = OwnerComp.GetAIOwner()->GetPawn();
 	auto Guard = Cast<APatrollingGuard>(Pawn);
 
-	TArray<AActor*> Waypoints = Guard->Waypoints;	
+	TArray<AActor*> Waypoints = Guard->Waypoints;
+	if (Waypoints.Num() == 0) return EBTNodeResult::Failed;
+
+	int Index = Blackboard->GetValueAsInt(IndexKey.SelectedKeyName);
 	auto NextWaypoint = Waypoints[Index];
 
-	//Index++;
-	//Index %= Waypoints.Num();
+	Index++;
+	Index %= Waypoints.Num();
 
 	Blackboard->SetValueAsInt(IndexKey.SelectedKeyName, Index);
 	Blackboard->SetValueAsObject(WaypointKey.SelectedKeyName, NextWaypoint);
