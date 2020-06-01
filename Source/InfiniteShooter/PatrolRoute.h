@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "PatrolRoute.generated.h"
 
+/**
+* List of waypoints to help AI follow a patrol route
+*/
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class INFINITESHOOTER_API UPatrolRoute : public UActorComponent
