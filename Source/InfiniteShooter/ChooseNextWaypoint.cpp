@@ -14,6 +14,7 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& Own
 
 	auto Pawn = OwnerComp.GetAIOwner()->GetPawn();
 	auto Guard = Cast<APatrollingGuard>(Pawn);
+
 	TArray<AActor*> Waypoints = Guard->Waypoints;
 	if (Waypoints.Num() == 0) return EBTNodeResult::Failed;
 
