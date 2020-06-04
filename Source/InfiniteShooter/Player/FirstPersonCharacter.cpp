@@ -7,6 +7,8 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "Engine/World.h"
+#include "../Weapons/Gun.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -35,7 +37,8 @@ AFirstPersonCharacter::AFirstPersonCharacter()
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));		
+	
 }
 
 void AFirstPersonCharacter::BeginPlay()
@@ -43,9 +46,12 @@ void AFirstPersonCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	//TODO: Attach Gun as an Actor
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor	
+	if (GunBlueprint) {		
+		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);		
+		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+		Gun->SetActorHiddenInGame(false);
+	}
 	Mesh1P->SetHiddenInGame(false, true);	
 }
 

@@ -7,6 +7,7 @@
 #include "FirstPersonCharacter.generated.h"
 
 class UInputComponent;
+class AGun;
 
 UCLASS(config=Game)
 class AFirstPersonCharacter : public ACharacter
@@ -19,12 +20,7 @@ class AFirstPersonCharacter : public ACharacter
 		
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FirstPersonCameraComponent;
-
-	//TODO: Change FP_Gun skeletal mesh to AGun
-	/** Gun Actor */
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//class USkeletalMeshComponent* FP_Gun;
+	class UCameraComponent* FirstPersonCameraComponent;	
 
 public:
 	AFirstPersonCharacter();
@@ -39,8 +35,12 @@ public:
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;	
-	
+	float BaseLookUpRate;
+
+	/** Gun Blueprint */
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AGun> GunBlueprint;
+		
 protected:
 
 	/** Calls Gun component to fire. */
@@ -74,6 +74,9 @@ public:
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+private:
+	AGun* Gun;
 
 };
 
