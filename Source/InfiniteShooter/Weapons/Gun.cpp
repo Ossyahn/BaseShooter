@@ -13,7 +13,7 @@ AGun::AGun()
 {
 	// Create a gun mesh component
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	SkeletalMesh->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
+	SkeletalMesh->SetOnlyOwnerSee(false);			
 	SkeletalMesh->bCastDynamicShadow = false;
 	SkeletalMesh->CastShadow = false;
 	SkeletalMesh->SetupAttachment(RootComponent);
