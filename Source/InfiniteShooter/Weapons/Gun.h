@@ -17,18 +17,12 @@ class INFINITESHOOTER_API AGun : public AActor
 
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = Animation)
-	UAnimInstance* AnimInstance;
+	class USceneComponent* MuzzleLocation;
+		
 
 public:
 	AGun();
-
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	FVector GunOffset;
-
+	
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class ABallProjectile> ProjectileClass;
@@ -40,6 +34,10 @@ public:
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimMontage* FireAnimation;
+
+	/* AnimInstance of whatever holds the gun to be animated when firing*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	class UAnimInstance* AnimInstance;
 
 protected:
 	// Called when the game starts or when spawned

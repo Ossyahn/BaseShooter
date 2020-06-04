@@ -5,10 +5,11 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "BallProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Animation/AnimInstance.h"
 
 
 // Sets default values
-AGun::AGun()
+AGun::AGun() 
 {
 	// Create a gun mesh component
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
@@ -17,15 +18,9 @@ AGun::AGun()
 	SkeletalMesh->CastShadow = false;
 	SkeletalMesh->SetupAttachment(RootComponent);
 
-	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	FP_MuzzleLocation->SetupAttachment(SkeletalMesh);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-
-	// Default offset from the character location for projectiles to spawn
-	GunOffset = FVector(100.0f, 0.0f, 10.0f);
-
-	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P and FP_Gun
-	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
+	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	MuzzleLocation->SetupAttachment(SkeletalMesh);
+	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));	
 }
 
 // Called when the game starts or when spawned
@@ -43,10 +38,9 @@ void AGun::OnFire()
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			// TODO: Check using GetActorRotation instead of GetControlRotation
-			const FRotator SpawnRotation = GetActorRotation();
+			const FRotator SpawnRotation = MuzzleLocation->GetComponentRotation();
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+			const FVector SpawnLocation = MuzzleLocation->GetComponentLocation();
 
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
