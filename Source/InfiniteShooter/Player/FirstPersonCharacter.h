@@ -15,19 +15,16 @@ class AFirstPersonCharacter : public ACharacter
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
-	class USkeletalMeshComponent* Mesh1P;
-
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
-
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
+	class USkeletalMeshComponent* Mesh1P;	
 		
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FirstPersonCameraComponent;	
+	class UCameraComponent* FirstPersonCameraComponent;
+
+	//TODO: Change FP_Gun skeletal mesh to AGun
+	/** Gun Actor */
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//class USkeletalMeshComponent* FP_Gun;
 
 public:
 	AFirstPersonCharacter();
@@ -42,29 +39,13 @@ public:
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
-
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector GunOffset;
-
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ABallProjectile> ProjectileClass;
-
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	class USoundBase* FireSound;
-
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	float BaseLookUpRate;	
 	
 protected:
-	
-	/** Fires a projectile. */
+
+	/** Calls Gun component to fire. */
 	void OnFire();
-	
+		
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
 
