@@ -25,7 +25,6 @@ ABallProjectile::ABallProjectile()
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = true;
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
@@ -35,9 +34,10 @@ void ABallProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 {
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
-	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
+	{	
+		if (ImpulseOnImpact > 0.f) {
+			OtherComp->AddImpulseAtLocation(GetVelocity() * ImpulseOnImpact, GetActorLocation());
+		}
 		Destroy();
 	}
 }
