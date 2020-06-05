@@ -18,19 +18,14 @@ AGun::AGun()
 	SkeletalMesh->CastShadow = false;
 	SkeletalMesh->SetupAttachment(RootComponent);
 
+	RootComponent = SkeletalMesh;
+
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->SetupAttachment(SkeletalMesh);
 	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));	
 }
 
-// Called when the game starts or when spawned
-void AGun::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void AGun::OnFire()
+void AGun::Fire()
 {
 	// try and fire a projectile
 	if (ProjectileClass != NULL)

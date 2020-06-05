@@ -49,8 +49,7 @@ void AFirstPersonCharacter::BeginPlay()
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor	
 	if (GunBlueprint) {		
 		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);		
-		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-		Gun->SetActorHiddenInGame(false);
+		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));		
 	}
 	Mesh1P->SetHiddenInGame(false, true);	
 }
@@ -85,7 +84,7 @@ void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 void AFirstPersonCharacter::OnFire()
 {
-	//Call gun to fire
+	Gun->Fire();
 }
 
 void AFirstPersonCharacter::MoveForward(float Value)
