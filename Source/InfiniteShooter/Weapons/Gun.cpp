@@ -3,7 +3,7 @@
 
 #include "Gun.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "BallProjectile.h"
+#include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
 
@@ -43,7 +43,7 @@ void AGun::Fire()
 
 			// TODO: Fix collision with player own capsule 
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<ABallProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
 
