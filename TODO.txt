@@ -1,0 +1,1 @@
+- Fix character and npc coupling with animation and other stuff (probably use components for coupling features)
