@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class INFINITESHOOTER_API UChooseNextWaypoint : public UBTTaskNode
+class BASESHOOTER_API UChooseNextWaypoint : public UBTTaskNode
 {
 	GENERATED_BODY()
 

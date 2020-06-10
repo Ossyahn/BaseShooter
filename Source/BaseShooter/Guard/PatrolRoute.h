@@ -11,7 +11,7 @@
 */
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class INFINITESHOOTER_API UPatrolRoute : public UActorComponent
+class BASESHOOTER_API UPatrolRoute : public UActorComponent
 {
 	GENERATED_BODY()
 

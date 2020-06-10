@@ -7,7 +7,7 @@
 #include "Gun.generated.h"
 
 UCLASS()
-class INFINITESHOOTER_API AGun : public AActor
+class BASESHOOTER_API AGun : public AActor
 {
 	GENERATED_BODY()
 	

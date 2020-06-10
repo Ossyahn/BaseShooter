@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class InfiniteShooterEditorTarget : TargetRules
+public class BaseShooterEditorTarget : TargetRules
 {
-	public InfiniteShooterEditorTarget(TargetInfo Target) : base(Target)
+	public BaseShooterEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("InfiniteShooter");
+		ExtraModuleNames.Add("BaseShooter");
 	}
 }

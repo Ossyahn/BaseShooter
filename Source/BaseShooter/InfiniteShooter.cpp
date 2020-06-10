@@ -3,5 +3,5 @@
 #include "InfiniteShooter.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, InfiniteShooter, "InfiniteShooter" );
+IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, BaseShooter, "BaseShooter" );
  
