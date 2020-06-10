@@ -1,1 +1,3 @@
 - Fix character and npc coupling with animation and other stuff (probably use components for coupling features)
+- Try to pre-bake shadows to mape tiles, or do something when they spawn
+- Load next tile in parallel to avoid load hickups 
