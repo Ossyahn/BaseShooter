@@ -10,7 +10,7 @@
 AInfiniteShooterHUD::AInfiniteShooterHUD()
 {
 	// Set the crosshair texture
-	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/InfiniteShooter/UI/FirstPersonCrosshair"));
+	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/BaseShooter/UI/FirstPersonCrosshair"));
 	CrosshairTex = CrosshairTexObj.Object;
 }
 
