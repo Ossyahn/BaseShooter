@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "InfiniteShooterGameMode.generated.h"
+#include "BaseShooterGameMode.generated.h"
 
 UCLASS(minimalapi)
-class AInfiniteShooterGameMode : public AGameModeBase
+class ABaseShooterGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	AInfiniteShooterGameMode();
+	ABaseShooterGameMode();
 };
 
 

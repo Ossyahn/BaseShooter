@@ -1,13 +1,13 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "InfiniteShooterHUD.h"
+#include "BaseShooterHUD.h"
 #include "Engine/Canvas.h"
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
 #include "UObject/ConstructorHelpers.h"
 
-AInfiniteShooterHUD::AInfiniteShooterHUD()
+ABaseShooterHUD::ABaseShooterHUD()
 {
 	// Set the crosshair texture
 	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/BaseShooter/UI/FirstPersonCrosshair"));
@@ -15,7 +15,7 @@ AInfiniteShooterHUD::AInfiniteShooterHUD()
 }
 
 
-void AInfiniteShooterHUD::DrawHUD()
+void ABaseShooterHUD::DrawHUD()
 {
 	Super::DrawHUD();
 

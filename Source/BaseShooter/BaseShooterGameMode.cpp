@@ -1,11 +1,11 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "InfiniteShooterGameMode.h"
-#include "InfiniteShooterHUD.h"
+#include "BaseShooterGameMode.h"
+#include "BaseShooterHUD.h"
 #include "Player/FirstPersonCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
-AInfiniteShooterGameMode::AInfiniteShooterGameMode()
+ABaseShooterGameMode::ABaseShooterGameMode()
 	: Super()
 {
 	// set default pawn class to our Blueprinted character
@@ -13,5 +13,5 @@ AInfiniteShooterGameMode::AInfiniteShooterGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	// use our custom HUD class
-	HUDClass = AInfiniteShooterHUD::StaticClass();
+	HUDClass = ABaseShooterHUD::StaticClass();
 }

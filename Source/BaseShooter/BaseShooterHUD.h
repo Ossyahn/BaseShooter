@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "InfiniteShooterHUD.generated.h"
+#include "BaseShooterHUD.generated.h"
 
 UCLASS()
-class AInfiniteShooterHUD : public AHUD
+class ABaseShooterHUD : public AHUD
 {
 	GENERATED_BODY()
 
 public:
-	AInfiniteShooterHUD();
+	ABaseShooterHUD();
 
 	/** Primary draw call for the HUD */
 	virtual void DrawHUD() override;
