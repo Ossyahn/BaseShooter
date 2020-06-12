@@ -3,3 +3,4 @@
 - Try to pre-bake shadows to mape tiles, or do something when they spawn
 - Load next tile in parallel to avoid load hickups
 - Create load screen and play after load of first map tiles
+- Review AI (encapsulate and refactor)
