@@ -20,17 +20,22 @@ class BASESHOOTER_API AActionCharacter : public ACharacter
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FirstPersonMesh;
-	
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	USkeletalMeshComponent* ThirdPersonMesh;
+	
 public:
 	// Sets default values for this character's properties
 	AActionCharacter();
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void Fire();
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AGun> GunBlueprint;
 
 	FORCEINLINE USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
-	FORCEINLINE USkeletalMeshComponent* GetThirdPersonMesh() const { return GetMesh(); }
+	FORCEINLINE USkeletalMeshComponent* GetThirdPersonMesh() const { return ThirdPersonMesh; }
 	FORCEINLINE UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	FORCEINLINE AGun* GetGun() const { return Gun; }
 

@@ -22,11 +22,16 @@ AActionCharacter::AActionCharacter()
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
 	
-	auto ThirdPersonMesh = GetMesh();
-
 	ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
 	ThirdPersonMesh->SetOwnerNoSee(true);
 	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
+}
+
+void AActionCharacter::Fire()
+{
+	if (Gun) {
+		Gun->Fire();
+	}
 }
 
 // Called when the game starts or when spawned
