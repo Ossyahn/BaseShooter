@@ -10,7 +10,7 @@
 ABaseShooterHUD::ABaseShooterHUD()
 {
 	// Set the crosshair texture
-	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/BaseShooter/UI/FirstPersonCrosshair"));
+	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/BaseShooter/UI/T_FirstPersonCrosshair"));
 	CrosshairTex = CrosshairTexObj.Object;
 }
 
