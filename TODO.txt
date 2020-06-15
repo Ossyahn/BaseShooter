@@ -4,3 +4,4 @@
 - Load next tile in parallel to avoid load hickups
 - Create load screen and play after load of first map tiles
 - Review AI (encapsulate and refactor)
+- Add player inertia to ball projectiles 
