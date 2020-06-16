@@ -43,6 +43,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	AGun* Gun;
-	class ChildActorComponent* GunComponent;
+	AGun* Gun = nullptr;
+	class ChildActorComponent* GunComponent = nullptr;
 };
