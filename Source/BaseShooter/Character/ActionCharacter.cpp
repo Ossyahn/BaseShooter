@@ -2,9 +2,10 @@
 
 
 #include "ActionCharacter.h"
-#include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/InputComponent.h"
 #include "../Weapons/Gun.h"
 
 // Sets default values
@@ -27,11 +28,10 @@ AActionCharacter::AActionCharacter()
 	USkeletalMeshComponent* ThirdPersonMesh = GetMesh();
 		
 	ThirdPersonMesh->SetOwnerNoSee(true);
-	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
-	
+	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());	
 }
 
-void AActionCharacter::Fire()
+void AActionCharacter::PullTrigger()
 {
 	if (Gun) {
 		Gun->Fire();
@@ -46,7 +46,13 @@ void AActionCharacter::BeginPlay()
 	if (GunBlueprint) {
 		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 		Gun->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-		Gun->AnimInstance = FirstPersonMesh->GetAnimInstance();
+		Gun->AnimInstance = FirstPersonMesh->GetAnimInstance();		
+	}	
+}
+
+void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	if (PlayerInputComponent) {
+		PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AActionCharacter::PullTrigger);
 	}
-	
 }

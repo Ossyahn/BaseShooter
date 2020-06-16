@@ -29,7 +29,7 @@ public:
 	AActionCharacter();
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void Fire();
+	void PullTrigger();
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AGun> GunBlueprint;
@@ -41,6 +41,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 private:
 	AGun* Gun = nullptr;
