@@ -14,6 +14,7 @@ AActionCharacter::AActionCharacter()
 		
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f));
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -21,10 +22,13 @@ AActionCharacter::AActionCharacter()
 	FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
+	FirstPersonMesh->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 	
-	ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
+	USkeletalMeshComponent* ThirdPersonMesh = GetMesh();
+		
 	ThirdPersonMesh->SetOwnerNoSee(true);
 	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
+	
 }
 
 void AActionCharacter::Fire()
