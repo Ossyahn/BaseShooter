@@ -34,6 +34,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AGun> GunBlueprint;
 
+	virtual void UnPossessed() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
 	FORCEINLINE USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
 	FORCEINLINE USkeletalMeshComponent* GetThirdPersonMesh() const { return GetMesh(); }
 	FORCEINLINE UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
@@ -41,7 +44,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 private:
 	AGun* Gun = nullptr;

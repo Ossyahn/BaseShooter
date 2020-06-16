@@ -43,17 +43,35 @@ void AActionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GunBlueprint) {
-		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
+	if (!GunBlueprint) return;
+
+	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
+
+	if (IsPlayerControlled()) 
+	{
 		Gun->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-		Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
-		Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
-	}	
+	}
+	else 
+	{
+		Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+	}
+
+	Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
+	Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
+		
+}
+
+void AActionCharacter::UnPossessed()
+{
+	Super::UnPossessed();
+
+	if (!Gun) return;
+
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 }
 
 void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	if (PlayerInputComponent) {
-		PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AActionCharacter::PullTrigger);
-	}
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AActionCharacter::PullTrigger);	
 }
