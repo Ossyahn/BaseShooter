@@ -50,7 +50,7 @@ void AFirstPersonCharacter::BeginPlay()
 	if (GunBlueprint) {		
 		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);		
 		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));		
-		Gun->AnimInstance = Mesh1P->GetAnimInstance();
+		Gun->FirstPersonAnimInstance = Mesh1P->GetAnimInstance();
 	}
 	Mesh1P->SetHiddenInGame(false, true);	
 }

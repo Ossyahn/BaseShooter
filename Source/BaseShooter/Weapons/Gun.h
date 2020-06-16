@@ -33,11 +33,17 @@ public:
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UAnimMontage* FirstPersonFireAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UAnimMontage* ThirdPersonFireAnimation;
 
 	/* AnimInstance of whatever holds the gun to be animated when firing*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-	class UAnimInstance* AnimInstance;
+	class UAnimInstance* FirstPersonAnimInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	class UAnimInstance* ThirdPersonAnimInstance;
 
 	/** Fires a projectile. */
 	UFUNCTION(BlueprintCallable)

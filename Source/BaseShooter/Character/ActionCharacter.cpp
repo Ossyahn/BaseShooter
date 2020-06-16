@@ -46,7 +46,8 @@ void AActionCharacter::BeginPlay()
 	if (GunBlueprint) {
 		Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 		Gun->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-		Gun->AnimInstance = FirstPersonMesh->GetAnimInstance();		
+		Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
+		Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
 	}	
 }
 
