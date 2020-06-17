@@ -16,16 +16,13 @@ class BASESHOOTER_API AMapTile : public AActor
 	// Box area on which actors will spawn procedurally in this Map Tile
 	UPROPERTY(VisibleDefaultsOnly)
 	UBoxComponent* SpawnBox = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = Spawn)
-	TSubclassOf<AActor> TestArrow;
-
+	
 public:	
 	// Sets default values for this actor's properties
 	AMapTile();
 
 	UFUNCTION(BlueprintCallable, Category = Map)
-	void PlaceActors();
+	void SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount);
 
 protected:
 	// Called when the game starts or when spawned

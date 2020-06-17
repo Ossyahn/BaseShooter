@@ -19,16 +19,18 @@ AMapTile::AMapTile()
 	SpawnBox->SetupAttachment(RootComponent);
 }
 
-void AMapTile::PlaceActors()
+void AMapTile::SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1)
 {
 	FVector BoxCenter = SpawnBox->GetComponentLocation();
 	FVector MinPoint = BoxCenter - SpawnBox->GetScaledBoxExtent();
 	FVector MaxPoint = BoxCenter + SpawnBox->GetScaledBoxExtent();
 
-	for (int i = 0; i <= 100; i++) 
+	int Amount = FMath::RandRange(MinAmount, MaxAmount);
+
+	for (int i = 0; i <= Amount; i++) 
 	{
 		FVector RandomPoint = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
-		GetWorld()->SpawnActor<AActor>(TestArrow, RandomPoint, FRotator());
+		GetWorld()->SpawnActor<AActor>(ToSpawn, RandomPoint, FRotator());
 	}
 }
 
