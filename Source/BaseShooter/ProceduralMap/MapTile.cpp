@@ -8,10 +8,7 @@
 
 // Sets default values
 AMapTile::AMapTile()
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+{ 	
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
 	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
@@ -30,7 +27,8 @@ void AMapTile::SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int M
 	for (int i = 0; i <= Amount; i++) 
 	{
 		FVector RandomPoint = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
-		GetWorld()->SpawnActor<AActor>(ToSpawn, RandomPoint, FRotator());
+		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, RandomPoint, FRotator());
+		SpawnedActor->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 	}
 }
 
@@ -39,12 +37,5 @@ void AMapTile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void AMapTile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
