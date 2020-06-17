@@ -21,8 +21,10 @@ public:
 	// Sets default values for this actor's properties
 	AMapTile();
 
+	// Spawns a number of actors between MinAmount and MaxAmount of the given class somewhere 
+	// inside the SpawnBox. 
 	UFUNCTION(BlueprintCallable, Category = Map)
-	void SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount);
+	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount);
 
 protected:
 	// Called when the game starts or when spawned

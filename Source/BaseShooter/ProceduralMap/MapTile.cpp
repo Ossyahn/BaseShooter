@@ -16,9 +16,9 @@ AMapTile::AMapTile()
 	SpawnBox->SetupAttachment(RootComponent);
 }
 
-void AMapTile::SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1)
+void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1)
 {
-	FVector BoxCenter = SpawnBox->GetComponentLocation();
+	FVector BoxCenter = SpawnBox->GetRelativeLocation();
 	FVector MinPoint = BoxCenter - SpawnBox->GetScaledBoxExtent();
 	FVector MaxPoint = BoxCenter + SpawnBox->GetScaledBoxExtent();
 
@@ -28,7 +28,7 @@ void AMapTile::SpawnActors(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int M
 	{
 		FVector RandomPoint = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
 		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, RandomPoint, FRotator());
-		SpawnedActor->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+		SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 	}
 }
 
