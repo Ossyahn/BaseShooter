@@ -6,11 +6,20 @@
 #include "GameFramework/Actor.h"
 #include "MapTile.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class BASESHOOTER_API AMapTile : public AActor
 {
 	GENERATED_BODY()
-	
+
+	// Box area on which actors will spawn procedurally in this Map Tile
+	UPROPERTY(VisibleDefaultsOnly)
+	UBoxComponent* SpawnBox = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Spawn)
+	TSubclassOf<AActor> TestArrow;
+
 public:	
 	// Sets default values for this actor's properties
 	AMapTile();
