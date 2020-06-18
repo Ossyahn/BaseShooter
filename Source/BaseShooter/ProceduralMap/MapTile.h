@@ -30,4 +30,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	bool CastSphere(FVector Location, float Radius, bool bDebugDraw);
+
 };
