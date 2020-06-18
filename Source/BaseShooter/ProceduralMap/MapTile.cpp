@@ -17,14 +17,14 @@ AMapTile::AMapTile()
 	SpawnBox->SetupAttachment(RootComponent);
 }
 
-void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount, bool bRandomRotation, bool bRandomScale)
+void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale)
 {
 	int Amount = FMath::RandRange(MinAmount, MaxAmount);
 
-	for (int i = 0; i <= Amount; i++) 
+	for (int i = 0; i < Amount; i++) 
 	{
 		//Spawning actor before finding empty location to know its dimensions
-		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn);
+		AActor* SpawnedActor = SpawnActor(ToSpawn, SpawnRotation, bRandomScale);
 		float BoundsRadius = GetBoundsRadius(SpawnedActor);
 		FVector OutRandomWorldLocation;
 		bool bEmpty = GetEmptyRandomLocation(BoundsRadius, OutRandomWorldLocation);
@@ -86,7 +86,7 @@ bool AMapTile::GetEmptyRandomLocation(float BoundsRadius, FVector& OutRandomWorl
 	FVector MinPoint = BoxCenter - SpawnBox->GetScaledBoxExtent();
 	FVector MaxPoint = BoxCenter + SpawnBox->GetScaledBoxExtent();
 
-	for (int i = 0; i <= MaxTries; i++) 
+	for (int i = 0; i < MaxTries; i++) 
 	{
 		FVector RandomWorldLocation = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
 		bool bHit = CastSphere(RandomWorldLocation, BoundsRadius, true);
@@ -113,5 +113,33 @@ float AMapTile::GetBoundsRadius(AActor* Actor, bool bDebugDraw)
 	DrawDebugLine(GetWorld(), OutActorOrigin, OutActorOrigin + OutActorExtent, FColor::Yellow, true);
 
 	return OutActorExtent.Size();
+}
+
+AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale)
+{
+	FTransform Transform = FTransform();
+
+	if (SpawnRotation == SpawnRotation::RandomAllAxis) 
+	{
+		float Pitch = FMath::RandRange(0.f, 360.f);
+		float Yaw = FMath::RandRange(0.f, 360.f);
+		float Roll = FMath::RandRange(0.f, 360.f);
+		Transform.SetRotation(FQuat(FRotator(Pitch, Yaw, Roll)));
+	}
+	else if (SpawnRotation == SpawnRotation::RandomYaw) 
+	{
+		float Yaw = FMath::RandRange(0.f, 360.f);
+		Transform.SetRotation(FQuat(FRotator(0.f, Yaw, 0.f)));
+	}
+	
+	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, Transform);
+
+	if (bRandomScale)
+	{
+		float Scale = FMath::RandRange(MinRandomScaling, MaxRandomScaling);
+		SpawnedActor->SetActorScale3D(FVector(Scale));
+	}
+
+	return SpawnedActor;
 }
 
