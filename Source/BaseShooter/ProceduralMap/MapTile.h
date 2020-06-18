@@ -8,6 +8,14 @@
 
 class UBoxComponent;
 
+struct BoundsData
+{
+	FVector Origin;
+	FVector Extent;
+	float InnerRadius;
+	float OuterRadius;
+};
+
 UENUM()
 enum SpawnRotation
 {
@@ -51,7 +59,7 @@ protected:
 
 private:
 	bool CastSphere(FVector Location, float Radius, bool bDebugDraw = false);
-	bool GetEmptyRandomLocation(float BoundRadius, FVector& OutRandomWorldLocation);
-	float GetBoundsRadius(AActor* Actor, bool bDebugDraw = false);
+	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
+	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
 	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale);
 };

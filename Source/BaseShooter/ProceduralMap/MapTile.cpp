@@ -25,15 +25,15 @@ void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, i
 	{
 		//Spawning actor before finding empty location to know its dimensions
 		AActor* SpawnedActor = SpawnActor(ToSpawn, SpawnRotation, bRandomScale);
-		float BoundsRadius = GetBoundsRadius(SpawnedActor);
+		BoundsData Bounds = GetBoundsData(SpawnedActor);
 		FVector OutRandomWorldLocation;
-		bool bEmpty = GetEmptyRandomLocation(BoundsRadius, OutRandomWorldLocation);
+		bool bEmpty = GetEmptyRandomLocation(Bounds.Origin, Bounds.InnerRadius, OutRandomWorldLocation);
 		if (bEmpty) 
 		{
 			SpawnedActor->SetActorLocation(OutRandomWorldLocation);
 			SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 			
-			GetBoundsRadius(SpawnedActor, true);
+			GetBoundsData(SpawnedActor, true);
 		}
 		else
 		{
@@ -80,7 +80,7 @@ bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)
 //Finds an spherical empty location the size of BoundsRadius inside SpawnBox. ng it in the OutRandomWorldLocation reference.
 // Returns true if an empty location was found, false if OutRandomWorldLocation is invalid. The number of tries 
 // depends on the MaxTries property
-bool AMapTile::GetEmptyRandomLocation(float BoundsRadius, FVector& OutRandomWorldLocation)
+bool AMapTile::GetEmptyRandomLocation(FVector BoundsCenter, float BoundsRadius, FVector& OutRandomWorldLocation)
 {
 	FVector BoxCenter = SpawnBox->GetComponentLocation();
 	FVector MinPoint = BoxCenter - SpawnBox->GetScaledBoxExtent();
@@ -89,7 +89,7 @@ bool AMapTile::GetEmptyRandomLocation(float BoundsRadius, FVector& OutRandomWorl
 	for (int i = 0; i < MaxTries; i++) 
 	{
 		FVector RandomWorldLocation = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
-		bool bHit = CastSphere(RandomWorldLocation, BoundsRadius, true);
+		bool bHit = CastSphere(RandomWorldLocation + BoundsCenter, BoundsRadius, true);
 		if (!bHit) 
 		{
 			OutRandomWorldLocation = RandomWorldLocation;
@@ -100,20 +100,25 @@ bool AMapTile::GetEmptyRandomLocation(float BoundsRadius, FVector& OutRandomWorl
 }
 
 //Finds the radius of the smaller possible sphere containing the bounds of the actor within.
-float AMapTile::GetBoundsRadius(AActor* Actor, bool bDebugDraw)
+BoundsData AMapTile::GetBoundsData(AActor* Actor, bool bDebugDraw)
 {
 	FVector OutActorOrigin;
 	FVector OutActorExtent;
 
-	Actor->GetActorBounds(true, OutActorOrigin, OutActorExtent);
-	float MaxAxis = FMath::Max(OutActorExtent.X, OutActorExtent.Y);
-	MaxAxis = FMath::Max(MaxAxis, OutActorExtent.Z);
+	BoundsData BoundsData;
 
-	if (!bDebugDraw) return MaxAxis;
+	Actor->GetActorBounds(true, OutActorOrigin, OutActorExtent);
+		
+	BoundsData.Origin = OutActorOrigin;
+	BoundsData.Extent = OutActorExtent;	
+	BoundsData.InnerRadius = Actor->GetSimpleCollisionRadius();
+	BoundsData.OuterRadius = OutActorExtent.Size();
+
+	if (!bDebugDraw) return BoundsData;
 	DrawDebugBox(GetWorld(), OutActorOrigin, OutActorExtent, FColor::Blue, true);
 	DrawDebugLine(GetWorld(), OutActorOrigin, OutActorOrigin + OutActorExtent, FColor::Yellow, true);
 		
-	return MaxAxis;
+	return BoundsData;
 }
 
 AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale)
