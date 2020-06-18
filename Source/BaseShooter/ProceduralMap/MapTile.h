@@ -16,7 +16,7 @@ class BASESHOOTER_API AMapTile : public AActor
 	// Box area on which actors will spawn procedurally in this Map Tile
 	UPROPERTY(VisibleDefaultsOnly)
 	UBoxComponent* SpawnBox = nullptr;
-	
+		
 public:	
 	// Sets default values for this actor's properties
 	AMapTile();
@@ -26,11 +26,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Map)
 	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount);
 
+	UPROPERTY(EditDefaultsOnly, Category = Spawn)
+	int32 MaxTries = 10;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
 	bool CastSphere(FVector Location, float Radius, bool bDebugDraw);
-
+	bool GetEmptyRandomLocation(float BoundRadius, FVector& OutRandomWorldLocation);
+	float GetBoundsRadius(AActor* Actor);
 };
