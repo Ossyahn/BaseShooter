@@ -74,6 +74,9 @@ bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw = fals
 	return bHit;
 }
 
+//Finds an empty location the size of BoundsRadius, setting it in OutRandomWorldLocation. Returns true if an
+//empty location was found, false if OutRandomWorldLocation is invalid. The number of tries depends on the MaxTries
+//property
 bool AMapTile::GetEmptyRandomLocation(float BoundsRadius, FVector& OutRandomWorldLocation)
 {
 	FVector BoxCenter = SpawnBox->GetComponentLocation();
