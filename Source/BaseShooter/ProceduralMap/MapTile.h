@@ -40,19 +40,11 @@ public:
 	// Spawns a number of actors between MinAmount and MaxAmount of the given class somewhere 
 	// inside the SpawnBox. 
 	UFUNCTION(BlueprintCallable, Category = Map)
-	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1, TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None, bool bRandomScale = false);
+	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1, TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None, float MinScale = 1.f, float MaxScale = 1.f);
 
 	UPROPERTY(EditDefaultsOnly, Category = Spawn)
 	int32 MaxTries = 10;
-
-	// Smallest scale respect the original when random scale set to true
-	UPROPERTY(EditDefaultsOnly, Category = Spawn)
-	float MinRandomScaling = 0.5f;
-
-	// Biggest scale respect the original when random scale set to true
-	UPROPERTY(EditDefaultsOnly, Category = Spawn)
-	float MaxRandomScaling = 2.f;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = Spawn)
 	bool bDrawDebugSpawnVolumes = false;
 
@@ -64,5 +56,5 @@ private:
 	bool CastSphere(FVector Location, float Radius, bool bDebugDraw = false);
 	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
 	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
-	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale);
+	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale);
 };
