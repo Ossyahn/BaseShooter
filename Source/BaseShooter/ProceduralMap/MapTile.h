@@ -53,6 +53,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Spawn)
 	float MaxRandomScaling = 2.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = Spawn)
+	bool bDrawDebugSpawnVolumes = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

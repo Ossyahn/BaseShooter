@@ -31,9 +31,8 @@ void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, i
 		if (bEmpty) 
 		{
 			SpawnedActor->SetActorLocation(OutRandomWorldLocation);
-			SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-			
-			GetBoundsData(SpawnedActor, true);
+			SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));			
+			GetBoundsData(SpawnedActor, bDrawDebugSpawnVolumes);
 		}
 		else
 		{
@@ -89,7 +88,7 @@ bool AMapTile::GetEmptyRandomLocation(FVector BoundsCenter, float BoundsRadius, 
 	for (int i = 0; i < MaxTries; i++) 
 	{
 		FVector RandomWorldLocation = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
-		bool bHit = CastSphere(RandomWorldLocation + BoundsCenter, BoundsRadius, true);
+		bool bHit = CastSphere(RandomWorldLocation + BoundsCenter, BoundsRadius, bDrawDebugSpawnVolumes);
 		if (!bHit) 
 		{
 			OutRandomWorldLocation = RandomWorldLocation;
@@ -108,10 +107,13 @@ BoundsData AMapTile::GetBoundsData(AActor* Actor, bool bDebugDraw)
 	BoundsData BoundsData;
 
 	Actor->GetActorBounds(true, OutActorOrigin, OutActorExtent);
-		
+
+	float MaxAxis = FMath::Max(OutActorExtent.X, OutActorExtent.Y);
+	MaxAxis = FMath::Max(MaxAxis, OutActorExtent.Z);
+
 	BoundsData.Origin = OutActorOrigin;
-	BoundsData.Extent = OutActorExtent;	
-	BoundsData.InnerRadius = Actor->GetSimpleCollisionRadius();
+	BoundsData.Extent = OutActorExtent;
+	BoundsData.InnerRadius = MaxAxis;
 	BoundsData.OuterRadius = OutActorExtent.Size();
 
 	if (!bDebugDraw) return BoundsData;
