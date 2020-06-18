@@ -106,13 +106,14 @@ float AMapTile::GetBoundsRadius(AActor* Actor, bool bDebugDraw)
 	FVector OutActorExtent;
 
 	Actor->GetActorBounds(true, OutActorOrigin, OutActorExtent);
+	float MaxAxis = FMath::Max(OutActorExtent.X, OutActorExtent.Y);
+	MaxAxis = FMath::Max(MaxAxis, OutActorExtent.Z);
 
-	if (!bDebugDraw) return OutActorExtent.Size();
-
+	if (!bDebugDraw) return MaxAxis;
 	DrawDebugBox(GetWorld(), OutActorOrigin, OutActorExtent, FColor::Blue, true);
 	DrawDebugLine(GetWorld(), OutActorOrigin, OutActorOrigin + OutActorExtent, FColor::Yellow, true);
-
-	return OutActorExtent.Size();
+		
+	return MaxAxis;
 }
 
 AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, bool bRandomScale)
