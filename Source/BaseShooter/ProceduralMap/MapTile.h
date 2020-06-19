@@ -41,6 +41,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Map)
 	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances);
+		
+	UFUNCTION(BlueprintCallable, Category = "NavMesh")
+	void SetNavMeshPool(class UActorPool* InNavMeshPool);
 
 	// Box area on which actors will spawn procedurally in this Map Tile
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
@@ -52,6 +55,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Spawn)
 	bool bDrawDebugSpawnVolumes = false;
 
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,4 +66,6 @@ private:
 	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
 	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
 	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale);
+
+	class UActorPool* NavMeshPool;
 };

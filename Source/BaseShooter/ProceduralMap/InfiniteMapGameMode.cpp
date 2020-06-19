@@ -4,6 +4,12 @@
 #include "InfiniteMapGameMode.h"
 #include "EngineUtils.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
+#include "../ActorPool/ActorPool.h"
+
+AInfiniteMapGameMode::AInfiniteMapGameMode()
+{
+	NavMeshPool = CreateDefaultSubobject<UActorPool>(FName("NavMeshPool"));
+}
 
 void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 {

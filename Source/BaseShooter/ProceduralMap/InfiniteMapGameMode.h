@@ -15,8 +15,14 @@ class BASESHOOTER_API AInfiniteMapGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	AInfiniteMapGameMode();
+
 	UFUNCTION(BlueprintCallable, Category = Pooling)
 	void PopulateBoundsVolumePool();
+		
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NavMeshPool")
+	class UActorPool* NavMeshPool;	
 
 private:
 	void AddToPool(class ANavMeshBoundsVolume* NavMesh);

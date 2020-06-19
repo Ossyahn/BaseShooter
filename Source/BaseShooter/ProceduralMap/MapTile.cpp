@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "../ActorPool/ActorPool.h"
 
 // Sets default values
 AMapTile::AMapTile()
@@ -57,6 +58,12 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 		FVector ComponentWorldLocation = GrassInstancedComponent->GetComponentLocation();
 		GrassInstancedComponent->AddInstance(FTransform(RelativeRandomLocation - ComponentWorldLocation));
 	}
+}
+
+void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
+{
+	NavMeshPool = InNavMeshPool;
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Set"), *(NavMeshPool->GetName()));
 }
 
 // Called when the game starts or when spawned
