@@ -12,11 +12,11 @@ class BASESHOOTER_API UActorPool : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UActorPool();
-	
-	AActor* Pull();
-	void Push(AActor* Actor);
+public:		
+	AActor* Acquire();
+	void Release(AActor* Actor);
 	void Add(AActor* Actor);
+
+private:
+	AActor* Actor;
 };

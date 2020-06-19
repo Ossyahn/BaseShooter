@@ -69,4 +69,5 @@ private:
 	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale);
 
 	class UActorPool* NavMeshPool;
+	class ANavMeshBoundsVolume* NavMesh;
 };

@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Navmesh/NavMeshBoundsVolume.h"
 #include "../ActorPool/ActorPool.h"
 
 // Sets default values
@@ -63,19 +64,19 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
 {
 	NavMeshPool = InNavMeshPool;
-	UE_LOG(LogTemp, Warning, TEXT("[%s] Set"), *(NavMeshPool->GetName()));
-
 	PositionNavMesh();
 }
 
 void AMapTile::PositionNavMesh()
 {
-	AActor* NavMesh = NavMeshPool->Pull();
+	NavMesh = (ANavMeshBoundsVolume*)NavMeshPool->Acquire();
 	if (!NavMesh)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Tried to Pull from an empty NavMeshPool"));
 		return;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("%s Pulled"), *NavMesh->GetName());
+
 	NavMesh->SetActorLocation(GetActorLocation());
 }
 
@@ -89,8 +90,13 @@ void AMapTile::BeginPlay()
 void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
-	UE_LOG(LogTemp, Warning, TEXT("[%s] End Play"), *this->GetName());
+	if (!NavMesh) {
+		UE_LOG(LogTemp, Warning, TEXT("No NavMesh reference"));
+		return;
+	}
+	NavMeshPool->Release(NavMesh);
+	UE_LOG(LogTemp, Warning, TEXT("%s Pushed and derreferenced"), *NavMesh->GetName());
+	NavMesh = nullptr;
 }
 
 bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)

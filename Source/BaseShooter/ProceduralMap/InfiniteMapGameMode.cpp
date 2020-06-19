@@ -24,5 +24,6 @@ void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 
 void AInfiniteMapGameMode::AddToPool(ANavMeshBoundsVolume* NavMesh)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Found NavMesh: %s"), *NavMesh->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Added To Pool: %s"), *NavMesh->GetName());
+	NavMeshPool->Add(NavMesh);
 }

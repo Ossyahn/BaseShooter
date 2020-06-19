@@ -4,26 +4,21 @@
 #include "ActorPool.h"
 
 // Sets default values for this component's properties
-UActorPool::UActorPool()
-{
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+AActor* UActorPool::Acquire()
+{
+	AActor* ActorToReturn = Actor;
+	Actor = nullptr;
+	return ActorToReturn;
 }
 
-AActor* UActorPool::Pull()
+void UActorPool::Release(AActor* InActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("[%s] Pool Pulled"), *(this->GetName()));
-
-	return nullptr;
+	Actor = InActor;
 }
 
-void UActorPool::Push(AActor* Actor)
+void UActorPool::Add(AActor* InActor)
 {
+	Release(InActor);
 }
 
-void UActorPool::Add(AActor* Actor)
-{
-}
