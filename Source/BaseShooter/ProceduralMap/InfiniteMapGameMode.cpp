@@ -7,19 +7,16 @@
 
 void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 {
-	auto ActorIterator = TActorIterator<AActor>(GetWorld());
+	auto ActorIterator = TActorIterator<ANavMeshBoundsVolume>(GetWorld());
 	while (ActorIterator)
 	{
-		AActor* FoundActor = *ActorIterator;
-		if (FoundActor->IsA(AActor::StaticClass()))
-		{
-			AddToPool(FoundActor);
-		}
+		ANavMeshBoundsVolume* FoundActor = *ActorIterator;
+		AddToPool((ANavMeshBoundsVolume*)FoundActor);
 		++ActorIterator;
 	}
 }
 
-void AInfiniteMapGameMode::AddToPool(AActor* NavMesh)
+void AInfiniteMapGameMode::AddToPool(ANavMeshBoundsVolume* NavMesh)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Found NavMesh: %s"), *NavMesh->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Found NavMesh: %s"), *NavMesh->GetName());
 }
