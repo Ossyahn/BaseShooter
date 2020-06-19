@@ -40,7 +40,7 @@ public:
 	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1, TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None, float MinScale = 1.f, float MaxScale = 1.f);
 
 	UFUNCTION(BlueprintCallable, Category = Map)
-	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 Density);
+	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances);
 
 	// Box area on which actors will spawn procedurally in this Map Tile
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)

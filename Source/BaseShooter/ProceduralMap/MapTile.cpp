@@ -43,14 +43,14 @@ void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, i
 	}
 }
 
-void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 Density)
+void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances)
 {
 	// TODO: Figure out better the relative and global transforms and locations
 	FVector BoxCenter = SpawnArea->GetRelativeLocation();
 	FVector MinPoint = BoxCenter - SpawnArea->GetScaledBoxExtent();
 	FVector MaxPoint = BoxCenter + SpawnArea->GetScaledBoxExtent();
 
-	for (int i = 0; i < Density; i++)
+	for (int i = 0; i < NumInstances; i++)
 	{
 		FVector RandomLocation = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
 		FVector RelativeRandomLocation = GrassInstancedComponent->GetComponentTransform().TransformPosition(RandomLocation);
