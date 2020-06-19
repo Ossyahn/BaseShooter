@@ -64,6 +64,19 @@ void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
 {
 	NavMeshPool = InNavMeshPool;
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Set"), *(NavMeshPool->GetName()));
+
+	PositionNavMesh();
+}
+
+void AMapTile::PositionNavMesh()
+{
+	AActor* NavMesh = NavMeshPool->Pull();
+	if (!NavMesh)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tried to Pull from an empty NavMeshPool"));
+		return;
+	}
+	NavMesh->SetActorLocation(GetActorLocation());
 }
 
 // Called when the game starts or when spawned
@@ -71,6 +84,13 @@ void AMapTile::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	UE_LOG(LogTemp, Warning, TEXT("[%s] End Play"), *this->GetName());
 }
 
 bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)

@@ -15,6 +15,8 @@ UActorPool::UActorPool()
 
 AActor* UActorPool::Pull()
 {
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Pool Pulled"), *(this->GetName()));
+
 	return nullptr;
 }
 
