@@ -63,6 +63,7 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 void AMapTile::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)
