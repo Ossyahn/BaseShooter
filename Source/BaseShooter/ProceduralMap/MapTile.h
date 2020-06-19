@@ -7,6 +7,7 @@
 #include "MapTile.generated.h"
 
 class UBoxComponent;
+class UHierarchicalInstancedStaticMeshComponent;
 
 struct BoundsData
 {
@@ -28,10 +29,6 @@ UCLASS()
 class BASESHOOTER_API AMapTile : public AActor
 {
 	GENERATED_BODY()
-
-	// Box area on which actors will spawn procedurally in this Map Tile
-	UPROPERTY(VisibleDefaultsOnly)
-	UBoxComponent* SpawnBox = nullptr;
 			
 public:	
 	// Sets default values for this actor's properties
@@ -41,6 +38,13 @@ public:
 	// inside the SpawnBox. 
 	UFUNCTION(BlueprintCallable, Category = Map)
 	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1, TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None, float MinScale = 1.f, float MaxScale = 1.f);
+
+	UFUNCTION(BlueprintCallable, Category = Map)
+	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 Density);
+
+	// Box area on which actors will spawn procedurally in this Map Tile
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UBoxComponent* SpawnBox = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Spawn)
 	int32 MaxTries = 10;

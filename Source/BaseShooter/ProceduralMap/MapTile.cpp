@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
 
 // Sets default values
 AMapTile::AMapTile()
@@ -15,6 +16,7 @@ AMapTile::AMapTile()
 	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
 	SpawnBox->InitBoxExtent(FVector(100.f, 100.f, 0.f));
 	SpawnBox->SetupAttachment(RootComponent);
+
 }
 
 void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale)
@@ -38,6 +40,22 @@ void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, i
 		{
 			SpawnedActor->Destroy();
 		}
+	}
+}
+
+void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 Density)
+{
+	// TODO: Figure out better the relative and global transforms and locations
+	FVector BoxCenter = SpawnArea->GetRelativeLocation();
+	FVector MinPoint = BoxCenter - SpawnArea->GetScaledBoxExtent();
+	FVector MaxPoint = BoxCenter + SpawnArea->GetScaledBoxExtent();
+
+	for (int i = 0; i < Density; i++)
+	{
+		FVector RandomLocation = FMath::RandPointInBox(FBox(MinPoint, MaxPoint));
+		FVector RelativeRandomLocation = GrassInstancedComponent->GetComponentTransform().TransformPosition(RandomLocation);
+		FVector ComponentWorldLocation = GrassInstancedComponent->GetComponentLocation();
+		GrassInstancedComponent->AddInstance(FTransform(RelativeRandomLocation - ComponentWorldLocation));
 	}
 }
 
