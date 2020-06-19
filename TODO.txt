@@ -5,3 +5,8 @@
 - Create load screen and play after load of first map tiles
 - Review AI (encapsulate and refactor)
 - Add player inertia to ball projectiles 
+- User Instanced Static Meshes for sack walls
+- Convert Spawn Actors and Spawn Grass to components (and streamline grass spawn relative locations)
+- Redo SackWalls with InstancedStaticMesh
+- Use cooldown on ball projectiles to avoid shooting up because the animation
+- Do random spread on weapons using sweeps to see the collisions
