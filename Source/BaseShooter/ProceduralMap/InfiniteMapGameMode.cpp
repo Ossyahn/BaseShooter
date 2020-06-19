@@ -3,6 +3,7 @@
 
 #include "InfiniteMapGameMode.h"
 #include "EngineUtils.h"
+#include "NavMesh/NavMeshBoundsVolume.h"
 
 void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 {
@@ -10,12 +11,15 @@ void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 	while (ActorIterator)
 	{
 		AActor* FoundActor = *ActorIterator;
-		AddToPool(FoundActor);
+		if (FoundActor->IsA(AActor::StaticClass()))
+		{
+			AddToPool(FoundActor);
+		}
 		++ActorIterator;
 	}
 }
 
-void AInfiniteMapGameMode::AddToPool(AActor* Actor)
+void AInfiniteMapGameMode::AddToPool(AActor* NavMesh)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Found Actor: %s"), *Actor->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found NavMesh: %s"), *NavMesh->GetName());
 }
