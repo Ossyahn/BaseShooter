@@ -65,7 +65,6 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
 {
 	NavMeshPool = InNavMeshPool;
-	UE_LOG(LogTemp, Warning, TEXT("NavMesh Pool Set, about to reposition"));
 	PositionNavMesh();
 }
 
@@ -90,7 +89,6 @@ void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		return;
 	}
 	NavMeshPool->Release(NavMesh);
-	UE_LOG(LogTemp, Warning, TEXT("%s Pushed and derreferenced"), *NavMesh->GetName());
 }
 
 bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)
