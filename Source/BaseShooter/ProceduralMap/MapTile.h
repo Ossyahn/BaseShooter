@@ -49,10 +49,13 @@ public:
 
 	// Spawns a number of actors between MinAmount and MaxAmount of the given class somewhere 
 	// inside the SpawnBox. 
-	UFUNCTION(BlueprintCallable, Category = "Map")
+	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount = 1, int MaxAmount = 1);
 
-	UFUNCTION(BlueprintCallable, Category = "Map")
+	UFUNCTION(BlueprintCallable, Category = "Spawn")
+	void SpawnPawnsRandomly(TSubclassOf<APawn> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount = 1, int MaxAmount = 1);
+
+	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances);
 		
 	UFUNCTION(BlueprintCallable, Category = "NavMesh")
@@ -80,6 +83,7 @@ private:
 	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
 	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
 	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData);
+	bool PlaceInEmptyLocation(BoundsData Bounds, AActor* SpawnedActor);
 
 	class UActorPool* NavMeshPool;
 	class ANavMeshBoundsVolume* NavMesh;

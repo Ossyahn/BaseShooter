@@ -22,27 +22,46 @@ AMapTile::AMapTile()
 
 }
 
+void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
+{
+	NavMeshPool = InNavMeshPool;
+	PositionNavMesh();
+}
+
 void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount, int MaxAmount)
 {
-	int Amount = FMath::RandRange(MinAmount, MaxAmount);
+	if (!ensureAlwaysMsgf(ToSpawn, TEXT("[%s] No Actor class To Spawn vas provided in SpawnActorsRandomly call"), *(this->GetName()))) return;
 
+	int Amount = FMath::RandRange(MinAmount, MaxAmount);
 	for (int i = 0; i < Amount; i++) 
 	{
-		//Spawning actor before finding empty location to know its dimensions
+		//Spawning actor before finding empty location to know its bounds
 		AActor* SpawnedActor = SpawnActor(ToSpawn, ActorPlacementData);
 		BoundsData Bounds = GetBoundsData(SpawnedActor);
-		FVector OutRandomWorldLocation;
-		bool bEmpty = GetEmptyRandomLocation(Bounds.Origin, Bounds.InnerRadius, OutRandomWorldLocation);
-		if (bEmpty) 
-		{
-			SpawnedActor->SetActorLocation(OutRandomWorldLocation);
-			SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));			
-			GetBoundsData(SpawnedActor, bDrawDebugSpawnVolumes);
-		}
-		else
+		if (PlaceInEmptyLocation(Bounds, SpawnedActor) == false)		
 		{
 			SpawnedActor->Destroy();
 		}
+	}
+}
+
+void AMapTile::SpawnPawnsRandomly(TSubclassOf<APawn> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount, int MaxAmount)
+{
+	if (!ensureAlwaysMsgf(ToSpawn, TEXT("[%s] No Pawn class To Spawn vas provided in SpawnPawnsRandomly call"), *(this->GetName()))) return;
+
+	int Amount = FMath::RandRange(MinAmount, MaxAmount);
+	for (int i = 0; i < Amount; i++)
+	{
+		//Spawning actor before finding empty location to know its bounds
+		APawn* SpawnedPawn = Cast<APawn>(SpawnActor(ToSpawn, ActorPlacementData));
+		BoundsData Bounds = GetBoundsData(SpawnedPawn);
+		if (PlaceInEmptyLocation(Bounds, SpawnedPawn) == false)
+		{
+			SpawnedPawn->Destroy();
+			continue;
+		}
+		SpawnedPawn->SpawnDefaultController();
+		SpawnedPawn->Tags.Add(FName("Enemy"));
 	}
 }
 
@@ -62,25 +81,6 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 	}
 }
 
-void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
-{
-	NavMeshPool = InNavMeshPool;
-	PositionNavMesh();
-}
-
-void AMapTile::PositionNavMesh()
-{
-	NavMesh = (ANavMeshBoundsVolume*)NavMeshPool->Acquire();
-	if (!NavMesh)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Tried to Acquire from an empty NavMeshPool"));
-		return;
-	}
-	
-	NavMesh->SetActorLocation(GetActorLocation() + NavMeshOffset);
-	FNavigationSystem::Build(*GetWorld());
-}
-
 void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
@@ -91,33 +91,56 @@ void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	NavMeshPool->Release(NavMesh);
 }
 
-bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)
+void AMapTile::PositionNavMesh()
 {
-	FHitResult OutHitResult;
-	bool bHit = GetWorld()->SweepSingleByChannel(
-		OutHitResult,
-		Location,
-		Location,
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2,
-		FCollisionShape::MakeSphere(Radius)
-	);
-	
-	if (!bDebugDraw) return bHit;
+	NavMesh = (ANavMeshBoundsVolume*)NavMeshPool->Acquire();
+	if (!NavMesh)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Tried to Acquire from an empty NavMeshPool"));
+		return;
+	}
 
-	FColor SphereColor = bHit ? FColor::Red : FColor::Emerald;
+	NavMesh->SetActorLocation(GetActorLocation() + NavMeshOffset);
+	FNavigationSystem::Build(*GetWorld());
+}
 
-	bool bPersistent = true;
-	DrawDebugSphere(
-		GetWorld(),
-		Location,
-		Radius,
-		16,
-		SphereColor,
-		bPersistent
-	);
+AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData)
+{
+	FTransform Transform = FTransform();
 
-	return bHit;
+	if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomAllAxis)
+	{
+		float Pitch = FMath::RandRange(0.f, 360.f);
+		float Yaw = FMath::RandRange(0.f, 360.f);
+		float Roll = FMath::RandRange(0.f, 360.f);
+		Transform.SetRotation(FQuat(FRotator(Pitch, Yaw, Roll)));
+	}
+	else if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomYaw)
+	{
+		float Yaw = FMath::RandRange(0.f, 360.f);
+		Transform.SetRotation(FQuat(FRotator(0.f, Yaw, 0.f)));
+	}
+
+	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, Transform);
+
+	float Scale = FMath::RandRange(ActorPlacementData.MinScale, ActorPlacementData.MaxScale);
+	SpawnedActor->SetActorScale3D(FVector(Scale));
+
+	return SpawnedActor;
+}
+
+bool AMapTile::PlaceInEmptyLocation(BoundsData Bounds, AActor* SpawnedActor)
+{
+	FVector OutRandomWorldLocation;
+	bool bEmpty = GetEmptyRandomLocation(Bounds.Origin, Bounds.InnerRadius, OutRandomWorldLocation);
+	if (bEmpty)
+	{
+		SpawnedActor->SetActorLocation(OutRandomWorldLocation);
+		SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+		GetBoundsData(SpawnedActor, true);
+		return true;
+	}
+	return false;
 }
 
 //Finds an spherical empty location the size of BoundsRadius inside SpawnBox. ng it in the OutRandomWorldLocation reference.
@@ -167,28 +190,33 @@ BoundsData AMapTile::GetBoundsData(AActor* Actor, bool bDebugDraw)
 	return BoundsData;
 }
 
-AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData)
+bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)
 {
-	FTransform Transform = FTransform();
+	FHitResult OutHitResult;
+	bool bHit = GetWorld()->SweepSingleByChannel(
+		OutHitResult,
+		Location,
+		Location,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(Radius)
+	);
 
-	if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomAllAxis) 
-	{
-		float Pitch = FMath::RandRange(0.f, 360.f);
-		float Yaw = FMath::RandRange(0.f, 360.f);
-		float Roll = FMath::RandRange(0.f, 360.f);
-		Transform.SetRotation(FQuat(FRotator(Pitch, Yaw, Roll)));
-	}
-	else if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomYaw)
-	{
-		float Yaw = FMath::RandRange(0.f, 360.f);
-		Transform.SetRotation(FQuat(FRotator(0.f, Yaw, 0.f)));
-	}
-	
-	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, Transform);
-		
-	float Scale = FMath::RandRange(ActorPlacementData.MinScale, ActorPlacementData.MaxScale);
-	SpawnedActor->SetActorScale3D(FVector(Scale));	
+	if (!bDebugDraw) return bHit;
 
-	return SpawnedActor;
+	FColor SphereColor = bHit ? FColor::Red : FColor::Emerald;
+
+	bool bPersistent = true;
+	DrawDebugSphere(
+		GetWorld(),
+		Location,
+		Radius,
+		16,
+		SphereColor,
+		bPersistent
+	);
+
+	return bHit;
 }
+
 
