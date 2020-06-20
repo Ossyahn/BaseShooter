@@ -22,14 +22,14 @@ AMapTile::AMapTile()
 
 }
 
-void AMapTile::SpawnActorsRandomly(FActorPlacementData ActorPlacementData, int MinAmount, int MaxAmount)
+void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount, int MaxAmount)
 {
 	int Amount = FMath::RandRange(MinAmount, MaxAmount);
 
 	for (int i = 0; i < Amount; i++) 
 	{
 		//Spawning actor before finding empty location to know its dimensions
-		AActor* SpawnedActor = SpawnActor(ActorPlacementData);
+		AActor* SpawnedActor = SpawnActor(ToSpawn, ActorPlacementData);
 		BoundsData Bounds = GetBoundsData(SpawnedActor);
 		FVector OutRandomWorldLocation;
 		bool bEmpty = GetEmptyRandomLocation(Bounds.Origin, Bounds.InnerRadius, OutRandomWorldLocation);
@@ -167,7 +167,7 @@ BoundsData AMapTile::GetBoundsData(AActor* Actor, bool bDebugDraw)
 	return BoundsData;
 }
 
-AActor* AMapTile::SpawnActor(FActorPlacementData ActorPlacementData)
+AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData)
 {
 	FTransform Transform = FTransform();
 
@@ -184,7 +184,7 @@ AActor* AMapTile::SpawnActor(FActorPlacementData ActorPlacementData)
 		Transform.SetRotation(FQuat(FRotator(0.f, Yaw, 0.f)));
 	}
 	
-	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ActorPlacementData.ToSpawn, Transform);
+	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, Transform);
 		
 	float Scale = FMath::RandRange(ActorPlacementData.MinScale, ActorPlacementData.MaxScale);
 	SpawnedActor->SetActorScale3D(FVector(Scale));	

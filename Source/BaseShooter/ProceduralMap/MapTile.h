@@ -21,9 +21,7 @@ USTRUCT(BlueprintType)
 struct FActorPlacementData
 {
 	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(BlueprintReadWrite)
-	TSubclassOf<AActor> ToSpawn;	
+				
 	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None;
 	UPROPERTY(BlueprintReadWrite)
@@ -52,7 +50,7 @@ public:
 	// Spawns a number of actors between MinAmount and MaxAmount of the given class somewhere 
 	// inside the SpawnBox. 
 	UFUNCTION(BlueprintCallable, Category = "Map")
-	void SpawnActorsRandomly(FActorPlacementData ActorPlacementData, int MinAmount = 1, int MaxAmount = 1);
+	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData, int MinAmount = 1, int MaxAmount = 1);
 
 	UFUNCTION(BlueprintCallable, Category = "Map")
 	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances);
@@ -81,7 +79,7 @@ private:
 	bool CastSphere(FVector Location, float Radius, bool bDebugDraw = false);
 	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
 	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
-	AActor* SpawnActor(FActorPlacementData ActorPlacementData);
+	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, FActorPlacementData ActorPlacementData);
 
 	class UActorPool* NavMeshPool;
 	class ANavMeshBoundsVolume* NavMesh;
