@@ -137,7 +137,7 @@ bool AMapTile::PlaceInEmptyLocation(BoundsData Bounds, AActor* SpawnedActor)
 	{
 		SpawnedActor->SetActorLocation(OutRandomWorldLocation);
 		SpawnedActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-		GetBoundsData(SpawnedActor, true);
+		GetBoundsData(SpawnedActor, bDrawDebugSpawnVolumes);
 		return true;
 	}
 	return false;
