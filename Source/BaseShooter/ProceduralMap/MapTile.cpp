@@ -8,6 +8,7 @@
 #include "Engine/World.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Navmesh/NavMeshBoundsVolume.h"
+#include "AI/NavigationSystemBase.h"
 #include "../ActorPool/ActorPool.h"
 
 // Sets default values
@@ -64,6 +65,7 @@ void AMapTile::SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* Gra
 void AMapTile::SetNavMeshPool(UActorPool* InNavMeshPool)
 {
 	NavMeshPool = InNavMeshPool;
+	UE_LOG(LogTemp, Warning, TEXT("NavMesh Pool Set, about to reposition"));
 	PositionNavMesh();
 }
 
@@ -72,19 +74,12 @@ void AMapTile::PositionNavMesh()
 	NavMesh = (ANavMeshBoundsVolume*)NavMeshPool->Acquire();
 	if (!NavMesh)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Tried to Pull from an empty NavMeshPool"));
+		UE_LOG(LogTemp, Error, TEXT("Tried to Acquire from an empty NavMeshPool"));
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%s Pulled"), *NavMesh->GetName());
-
-	NavMesh->SetActorLocation(GetActorLocation());
-}
-
-// Called when the game starts or when spawned
-void AMapTile::BeginPlay()
-{
-	Super::BeginPlay();
-
+	
+	NavMesh->SetActorLocation(GetActorLocation() + NavMeshOffset);
+	FNavigationSystem::Build(*GetWorld());
 }
 
 void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -96,7 +91,6 @@ void AMapTile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 	NavMeshPool->Release(NavMesh);
 	UE_LOG(LogTemp, Warning, TEXT("%s Pushed and derreferenced"), *NavMesh->GetName());
-	NavMesh = nullptr;
 }
 
 bool AMapTile::CastSphere(FVector Location, float Radius, bool bDebugDraw)

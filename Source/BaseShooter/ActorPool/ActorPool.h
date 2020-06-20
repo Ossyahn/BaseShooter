@@ -18,5 +18,5 @@ public:
 	void Add(AActor* Actor);
 
 private:
-	AActor* Actor;
+	TArray<AActor*> Pool;
 };

@@ -7,14 +7,16 @@
 
 AActor* UActorPool::Acquire()
 {
-	AActor* ActorToReturn = Actor;
-	Actor = nullptr;
-	return ActorToReturn;
+	if (Pool.Num() == 0)
+	{
+		return nullptr;
+	}
+	return Pool.Pop();
 }
 
 void UActorPool::Release(AActor* InActor)
 {
-	Actor = InActor;
+	Pool.Push(InActor);
 }
 
 void UActorPool::Add(AActor* InActor)
