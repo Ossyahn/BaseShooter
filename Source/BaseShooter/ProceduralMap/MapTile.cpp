@@ -22,14 +22,14 @@ AMapTile::AMapTile()
 
 }
 
-void AMapTile::SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount, int MaxAmount, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale)
+void AMapTile::SpawnActorsRandomly(FActorPlacementData ActorPlacementData, int MinAmount, int MaxAmount)
 {
 	int Amount = FMath::RandRange(MinAmount, MaxAmount);
 
 	for (int i = 0; i < Amount; i++) 
 	{
 		//Spawning actor before finding empty location to know its dimensions
-		AActor* SpawnedActor = SpawnActor(ToSpawn, SpawnRotation, MinScale, MaxScale);
+		AActor* SpawnedActor = SpawnActor(ActorPlacementData);
 		BoundsData Bounds = GetBoundsData(SpawnedActor);
 		FVector OutRandomWorldLocation;
 		bool bEmpty = GetEmptyRandomLocation(Bounds.Origin, Bounds.InnerRadius, OutRandomWorldLocation);
@@ -167,26 +167,26 @@ BoundsData AMapTile::GetBoundsData(AActor* Actor, bool bDebugDraw)
 	return BoundsData;
 }
 
-AActor* AMapTile::SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale)
+AActor* AMapTile::SpawnActor(FActorPlacementData ActorPlacementData)
 {
 	FTransform Transform = FTransform();
 
-	if (SpawnRotation == SpawnRotation::RandomAllAxis) 
+	if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomAllAxis) 
 	{
 		float Pitch = FMath::RandRange(0.f, 360.f);
 		float Yaw = FMath::RandRange(0.f, 360.f);
 		float Roll = FMath::RandRange(0.f, 360.f);
 		Transform.SetRotation(FQuat(FRotator(Pitch, Yaw, Roll)));
 	}
-	else if (SpawnRotation == SpawnRotation::RandomYaw) 
+	else if (ActorPlacementData.SpawnRotation == SpawnRotation::RandomYaw)
 	{
 		float Yaw = FMath::RandRange(0.f, 360.f);
 		Transform.SetRotation(FQuat(FRotator(0.f, Yaw, 0.f)));
 	}
 	
-	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ToSpawn, Transform);
+	AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ActorPlacementData.ToSpawn, Transform);
 		
-	float Scale = FMath::RandRange(MinScale, MaxScale);
+	float Scale = FMath::RandRange(ActorPlacementData.MinScale, ActorPlacementData.MaxScale);
 	SpawnedActor->SetActorScale3D(FVector(Scale));	
 
 	return SpawnedActor;

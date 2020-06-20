@@ -9,20 +9,35 @@
 class UBoxComponent;
 class UHierarchicalInstancedStaticMeshComponent;
 
-struct BoundsData
-{
-	FVector Origin;
-	FVector Extent;
-	float InnerRadius;
-	float OuterRadius;
-};
-
 UENUM()
 enum SpawnRotation
 {
 	None			UMETA(DisplayName = "None"),
 	RandomAllAxis	UMETA(DisplayName = "Random All Axis"),
 	RandomYaw		UMETA(DisplayName = "Random Yaw")
+};
+
+USTRUCT(BlueprintType)
+struct FActorPlacementData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	TSubclassOf<AActor> ToSpawn;	
+	UPROPERTY(BlueprintReadWrite)
+	TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None;
+	UPROPERTY(BlueprintReadWrite)
+	float MinScale = 1.f;
+	UPROPERTY(BlueprintReadWrite)
+	float MaxScale = 1.f;
+};
+
+struct BoundsData
+{
+	FVector Origin;
+	FVector Extent;
+	float InnerRadius;
+	float OuterRadius;
 };
 
 UCLASS()
@@ -37,7 +52,7 @@ public:
 	// Spawns a number of actors between MinAmount and MaxAmount of the given class somewhere 
 	// inside the SpawnBox. 
 	UFUNCTION(BlueprintCallable, Category = "Map")
-	void SpawnActorsRandomly(TSubclassOf<AActor> ToSpawn, int MinAmount = 1, int MaxAmount = 1, TEnumAsByte<SpawnRotation> SpawnRotation = SpawnRotation::None, float MinScale = 1.f, float MaxScale = 1.f);
+	void SpawnActorsRandomly(FActorPlacementData ActorPlacementData, int MinAmount = 1, int MaxAmount = 1);
 
 	UFUNCTION(BlueprintCallable, Category = "Map")
 	void SpawnGrassRandomly(UHierarchicalInstancedStaticMeshComponent* GrassInstancedComponent, UBoxComponent* SpawnArea, int32 NumInstances);
@@ -66,7 +81,7 @@ private:
 	bool CastSphere(FVector Location, float Radius, bool bDebugDraw = false);
 	bool GetEmptyRandomLocation(FVector BoundsCenter, float BoundRadius, FVector& OutRandomWorldLocation);
 	BoundsData GetBoundsData(AActor* Actor, bool bDebugDraw = false);
-	AActor* SpawnActor(TSubclassOf<AActor> ToSpawn, TEnumAsByte<SpawnRotation> SpawnRotation, float MinScale, float MaxScale);
+	AActor* SpawnActor(FActorPlacementData ActorPlacementData);
 
 	class UActorPool* NavMeshPool;
 	class ANavMeshBoundsVolume* NavMesh;
