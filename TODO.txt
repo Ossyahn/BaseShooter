@@ -1,3 +1,4 @@
+- Remove obsolete classes (guard, player, HUD, AI task)
 - Fix character and npc coupling with animation and other stuff (probably use components for coupling features)
 - Fix player shadow
 - Load next tile in parallel to avoid load hickups
@@ -10,3 +11,4 @@
 - Use cooldown on ball projectiles to avoid shooting up because the animation
 - Do random spread on weapons using sweeps to see the collisions
 - Move stuff from bp to C++ when possible and sensible
+- Fix navigation warning
