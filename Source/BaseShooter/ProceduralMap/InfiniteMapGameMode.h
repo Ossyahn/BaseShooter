@@ -19,10 +19,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Pooling)
 	void PopulateBoundsVolumePool();
+
+	UFUNCTION(BlueprintCallable, Category = "Score")
+	void NewMapTileConquered();
 		
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NavMeshPool")
 	class UActorPool* NavMeshPool;	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
+	int MapTilesConquered = 0;
 
 private:
 	void AddToPool(class ANavMeshBoundsVolume* NavMesh);

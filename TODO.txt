@@ -9,3 +9,4 @@
 - Redo SackWalls with InstancedStaticMesh
 - Use cooldown on ball projectiles to avoid shooting up because the animation
 - Do random spread on weapons using sweeps to see the collisions
+- Move stuff from bp to C++ when possible and sensible
