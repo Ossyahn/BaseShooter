@@ -1,4 +1,7 @@
+- Convert to an Excel with priorities
+- Check and clean Blueprints
 - Remove obsolete classes (guard, player, HUD, AI task)
+- Make the health regenerative instead of health points based
 - Fix character and npc coupling with animation and other stuff (probably use components for coupling features)
 - Fix player shadow
 - Load next tile in parallel to avoid load hickups
