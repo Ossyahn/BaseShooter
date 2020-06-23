@@ -15,6 +15,7 @@
 AMapTile::AMapTile()
 { 	
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Root = RootComponent;
 
 	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
 	SpawnBox->InitBoxExtent(FVector(100.f, 100.f, 0.f));

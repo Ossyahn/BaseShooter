@@ -1,4 +1,5 @@
 - Convert to an Excel with priorities
+- Destroy props in tiles after destroying the tile
 - Fix lack of initial Map Tile collision for spawning inside the volume
 - Remove obsolete classes (guard, player, HUD, AI task)
 - Remove Collision on death
