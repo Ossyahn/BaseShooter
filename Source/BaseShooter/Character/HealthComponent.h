@@ -31,7 +31,7 @@ public:
 
 	//TODO: Make private through functions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float Health;
+	float Health = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float MaxHealth = 100;
