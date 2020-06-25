@@ -7,32 +7,39 @@
 #include "ActionCharacter.generated.h"
 
 class AGun;
+class UHealthComponent;
 class UCameraComponent;
 class USkeletalMeshComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionCharacterDelegate);
+
 
 UCLASS()
 class BASESHOOTER_API AActionCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* FirstPersonMesh;
-
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//USkeletalMeshComponent* ThirdPersonMesh;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	UHealthComponent* HealthComponent;
 	
 public:
 	// Sets default values for this character's properties
 	AActionCharacter();
 
-	UFUNCTION(BlueprintCallable, Category = Weapon)
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void PullTrigger();
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AGun> GunBlueprint;
+
+	UPROPERTY(BlueprintAssignable, Category = "Death")
+	FActionCharacterDelegate OnCharacterDeath;
 
 	virtual void UnPossessed() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -48,4 +55,6 @@ protected:
 private:
 	AGun* Gun = nullptr;
 	class ChildActorComponent* GunComponent = nullptr;
+
+	void OnDeath();
 };
