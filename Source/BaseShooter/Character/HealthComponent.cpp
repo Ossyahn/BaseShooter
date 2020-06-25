@@ -17,12 +17,12 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::DealDamage(float Damage)
 {
 	Health -= fmod(Damage, Health);
-	if (IsDead()) {
-		OnDeath.Broadcast();
+	if (HasHealth()) {
+		OnNoHealth.Broadcast();
 	}
 }
 
-bool UHealthComponent::IsDead()
+bool UHealthComponent::HasHealth()
 {
 	return Health == 0;
 }

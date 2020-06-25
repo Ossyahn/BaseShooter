@@ -21,13 +21,13 @@ public:
 	virtual void DealDamage(float Damage);
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
-	virtual bool IsDead();
+	virtual bool HasHealth();
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	virtual void Kill();
 
 	UPROPERTY(BlueprintCallable, Category = "Death")
-	FHealthDelegate OnDeath;
+	FHealthDelegate OnNoHealth;
 
 	//TODO: Make private through functions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
