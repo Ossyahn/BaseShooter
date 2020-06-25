@@ -61,6 +61,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "NavMesh")
 	void SetNavMeshPool(class UActorPool* InNavMeshPool);
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	USceneComponent* Root;
+
 	// Box area on which actors will spawn procedurally in this Map Tile
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UBoxComponent* SpawnBox = nullptr;

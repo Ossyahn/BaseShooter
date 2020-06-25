@@ -22,6 +22,11 @@ void AInfiniteMapGameMode::PopulateBoundsVolumePool()
 	}
 }
 
+void AInfiniteMapGameMode::NewMapTileConquered()
+{
+	MapTilesConquered++;
+}
+
 void AInfiniteMapGameMode::AddToPool(ANavMeshBoundsVolume* NavMesh)
 {
 	NavMeshPool->Add(NavMesh);
