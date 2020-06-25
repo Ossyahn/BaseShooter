@@ -46,7 +46,7 @@ void AActionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//HealthComponent->OnDeath.AddDynamic(this, &AActionCharacter::OnDeath);
+	HealthComponent->OnNoHealth.AddDynamic(this, &AActionCharacter::OnDeath);
 
 	//TODO: have weapon previously spawned instead that on begin play
 	if (!GunBlueprint) return;
@@ -71,6 +71,7 @@ void AActionCharacter::BeginPlay()
 void AActionCharacter::OnDeath()
 {
 	OnCharacterDeath.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("Broadcasting OnDeath"));
 }
 
 void AActionCharacter::UnPossessed()

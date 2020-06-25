@@ -21,7 +21,7 @@ public:
 	virtual void DealDamage(float Damage);
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
-	virtual bool HasHealth();
+	virtual bool HasNoHealth();
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	virtual void Kill();
@@ -40,8 +40,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
+	bool bNoHealth = false;
 		
 };

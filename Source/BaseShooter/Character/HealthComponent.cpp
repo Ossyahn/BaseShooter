@@ -13,18 +13,23 @@ UHealthComponent::UHealthComponent()
 	// ...
 }
 
-// Reduce health property to a min of 0
+/// Reduce health property to a min of 0
 void UHealthComponent::DealDamage(float Damage)
 {
-	Health -= fmod(Damage, Health);
-	if (HasHealth()) {
+	if (bNoHealth) return;
+
+	FMath::Clamp<float>(Damage, 0, Health);
+	Health -= Damage;
+
+	if (Health == 0) {
+		bNoHealth = true;
 		OnNoHealth.Broadcast();
 	}
 }
 
-bool UHealthComponent::HasHealth()
+bool UHealthComponent::HasNoHealth()
 {
-	return Health == 0;
+	return bNoHealth;
 }
 
 void UHealthComponent::Kill()
@@ -38,14 +43,5 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHealth;	
-}
-
-
-// Called every frame
-void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
