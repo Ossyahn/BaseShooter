@@ -56,5 +56,6 @@ private:
 	AGun* Gun = nullptr;
 	class ChildActorComponent* GunComponent = nullptr;
 
+	UFUNCTION()
 	void OnDeath();
 };

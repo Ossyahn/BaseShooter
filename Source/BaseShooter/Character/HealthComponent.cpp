@@ -22,6 +22,8 @@ void UHealthComponent::DealDamage(float Damage)
 	Health -= Damage;
 
 	if (Health == 0) {
+		UE_LOG(LogTemp, Warning, TEXT("OnNoHealth broadcast"));
+
 		bNoHealth = true;
 		OnNoHealth.Broadcast();
 	}

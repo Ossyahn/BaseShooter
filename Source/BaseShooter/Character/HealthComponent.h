@@ -26,7 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	virtual void Kill();
 
-	UPROPERTY(BlueprintCallable, Category = "Death")
+	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FHealthDelegate OnNoHealth;
 
 	//TODO: Make private through functions
