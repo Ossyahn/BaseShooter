@@ -23,13 +23,25 @@ class BASESHOOTER_API AActionCharacter : public ACharacter
 	UCameraComponent* FirstPersonCameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* DeathCameraComponent;
+	UArrowComponent* DeathCameraSpawnPoint;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* FirstPersonMesh;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DeathCam")
+	float BlendTime = 3.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DeathCam")
+	TEnumAsByte<EViewTargetBlendFunction> BlendFunction = EViewTargetBlendFunction::VTBlend_EaseOut;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DeathCam")
+	float BlendExponent = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DeathCam")
+	bool LockOutgoing = false;
 	
 public:
 	// Sets default values for this character's properties

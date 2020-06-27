@@ -3,11 +3,14 @@
 
 #include "ActionCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraActor.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/ArrowComponent.h"
 #include "../Weapons/Gun.h"
 #include "HealthComponent.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -19,10 +22,10 @@ AActionCharacter::AActionCharacter()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.45f,1.75f, 64.f));
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	DeathCameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("DeathCamera"));
-	DeathCameraComponent->SetupAttachment(GetCapsuleComponent());
-	DeathCameraComponent->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
-	DeathCameraComponent->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+	DeathCameraSpawnPoint = CreateDefaultSubobject<UArrowComponent>(FName("DeathCameraTransform"));
+	DeathCameraSpawnPoint->SetupAttachment(GetCapsuleComponent());
+	DeathCameraSpawnPoint->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
+	DeathCameraSpawnPoint->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("FirstPersonMesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
@@ -76,7 +79,23 @@ void AActionCharacter::BeginPlay()
 void AActionCharacter::OnDeath()
 {
 	OnCharacterDeath.Broadcast();
-	UE_LOG(LogTemp, Warning, TEXT("Broadcasting OnDeath"));
+	
+	if (!Controller) return;
+
+	// TODO: Move DeathCam logic to a component
+	auto PlayerController = GetController<APlayerController>();
+	if (PlayerController) 
+	{
+		auto DeathCamera = GetWorld()->SpawnActor<ACameraActor>(
+			DeathCameraSpawnPoint->GetComponentLocation(), 
+			DeathCameraSpawnPoint->GetComponentRotation()
+		);
+
+		PlayerController->SetViewTargetWithBlend(
+			DeathCamera, BlendTime, BlendFunction, BlendExponent);
+	}
+		
+	Controller->UnPossess();
 }
 
 void AActionCharacter::UnPossessed()
