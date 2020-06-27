@@ -26,7 +26,7 @@ AActionCharacter::AActionCharacter()
 	DeathCameraSpawnPoint->SetupAttachment(GetCapsuleComponent());
 	DeathCameraSpawnPoint->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
 	DeathCameraSpawnPoint->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
-
+	
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("FirstPersonMesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
@@ -113,7 +113,11 @@ void AActionCharacter::PossessedBy(AController* NewController)
 
 	auto PlayerController = Cast<APlayerController>(NewController);
 
-	if(PlayerController) PlayerController->SetViewTarget(this);
+	if (PlayerController)
+	{
+		PlayerController->bAutoManageActiveCameraTarget = false;
+		PlayerController->SetViewTarget(this);
+	}
 }
 
 void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
