@@ -42,35 +42,24 @@ AActionCharacter::AActionCharacter()
 
 	GunChildActor = CreateDefaultSubobject<UChildActorComponent>(FName("Gun"));
 	GunChildActor->SetupAttachment(ThirdPersonMesh, FName("GripPoint"));
-
-	if (DefaultGunBlueprint)
-	{
-		GunChildActor->SetChildActorClass(DefaultGunBlueprint);
-	}
-
-	auto Gun = Cast<AGun>(GunChildActor->GetChildActor());
-	if (Gun)
-	{
-		Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
-		Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
-	}
-
+		
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(FName("Health"));
 }
 
 void AActionCharacter::PullTrigger()
 {
-	auto Gun = Cast<AGun>(GunChildActor->GetChildActor());
+	UE_LOG(LogTemp, Warning, TEXT("Tried to fire"));
 
 	if (Gun) {
 		Gun->Fire();
 	}
 }
 
-// Called when the game starts or when spawned
 void AActionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitGun();
 
 	HealthComponent->OnNoHealth.AddDynamic(this, &AActionCharacter::OnDeath);
 }
@@ -87,6 +76,15 @@ void AActionCharacter::OnDeath()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Controller->UnPossess();
+}
+
+void AActionCharacter::InitGun()
+{
+	Gun = Cast<AGun>(GunChildActor->GetChildActor());
+	if (!Gun) return;
+	
+	Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
+	Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();	
 }
 
 void AActionCharacter::UnPossessed()
