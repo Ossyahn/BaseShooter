@@ -10,6 +10,7 @@ class AGun;
 class UHealthComponent;
 class UCameraComponent;
 class USkeletalMeshComponent;
+class UDeathCamComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionCharacterDelegate);
 
@@ -23,7 +24,10 @@ class BASESHOOTER_API AActionCharacter : public ACharacter
 	UCameraComponent* FirstPersonCameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UDeathCamComponent* DeathCam;
+	UDeathCamComponent* DeathCam;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gun", meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* Gun;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* FirstPersonMesh;
@@ -38,8 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void PullTrigger();
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AGun> GunBlueprint;
+	UPROPERTY(EditDefaultsOnly, Category = "Gun")
+	TSubclassOf<AGun> DefaultGunBlueprint;
 
 	UPROPERTY(BlueprintAssignable, Category = "Death")
 	FActionCharacterDelegate OnCharacterDeath;
@@ -51,13 +55,13 @@ public:
 	FORCEINLINE USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
 	FORCEINLINE USkeletalMeshComponent* GetThirdPersonMesh() const { return GetMesh(); }
 	FORCEINLINE UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-	FORCEINLINE AGun* GetGun() const { return Gun; }
+	//FORCEINLINE AGun* GetGun() const { return Gun; }
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
-	AGun* Gun = nullptr;
+	//AGun* Gun = nullptr;
 	class ChildActorComponent* GunComponent = nullptr;
 
 	UFUNCTION()

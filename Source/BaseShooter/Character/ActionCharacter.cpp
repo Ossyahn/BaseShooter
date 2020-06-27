@@ -40,13 +40,21 @@ AActionCharacter::AActionCharacter()
 	ThirdPersonMesh->SetOwnerNoSee(true);
 	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());	
 
+	Gun = CreateDefaultSubobject<UChildActorComponent>(FName("Gun"));
+	Gun->SetupAttachment(ThirdPersonMesh, FName("GripPoint"));
+
+	if (DefaultGunBlueprint)
+	{
+		Gun->SetChildActorClass(DefaultGunBlueprint);
+	}
+
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(FName("Health"));
 }
 
 void AActionCharacter::PullTrigger()
 {
 	if (Gun) {
-		Gun->Fire();
+		//Gun->Fire();
 	}
 }
 
@@ -57,9 +65,11 @@ void AActionCharacter::BeginPlay()
 
 	HealthComponent->OnNoHealth.AddDynamic(this, &AActionCharacter::OnDeath);
 
+	/*
 	//TODO: have weapon previously spawned instead that on begin play
 	if (!GunBlueprint) return;
 
+	
 	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 
 	if (IsPlayerControlled()) 
@@ -74,7 +84,7 @@ void AActionCharacter::BeginPlay()
 
 	Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
 	Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
-		
+	*/
 }
 
 void AActionCharacter::OnDeath()
