@@ -57,6 +57,7 @@ public:
 	FActionCharacterDelegate OnCharacterDeath;
 
 	virtual void UnPossessed() override;
+	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	FORCEINLINE USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }

@@ -107,6 +107,15 @@ void AActionCharacter::UnPossessed()
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
 }
 
+void AActionCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	auto PlayerController = Cast<APlayerController>(NewController);
+
+	if(PlayerController) PlayerController->SetViewTarget(this);
+}
+
 void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AActionCharacter::PullTrigger);	
