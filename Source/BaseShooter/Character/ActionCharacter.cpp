@@ -19,6 +19,11 @@ AActionCharacter::AActionCharacter()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.45f,1.75f, 64.f));
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
+	DeathCameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("DeathCamera"));
+	DeathCameraComponent->SetupAttachment(GetCapsuleComponent());
+	DeathCameraComponent->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
+	DeathCameraComponent->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("FirstPersonMesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);

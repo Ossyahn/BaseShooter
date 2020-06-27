@@ -21,6 +21,9 @@ class BASESHOOTER_API AActionCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* DeathCameraComponent;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* FirstPersonMesh;
