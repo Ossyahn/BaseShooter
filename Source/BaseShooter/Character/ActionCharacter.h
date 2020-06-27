@@ -27,7 +27,7 @@ class BASESHOOTER_API AActionCharacter : public ACharacter
 	UDeathCamComponent* DeathCam;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gun", meta = (AllowPrivateAccess = "true"))
-	UChildActorComponent* Gun;
+	UChildActorComponent* GunChildActor;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	USkeletalMeshComponent* FirstPersonMesh;
