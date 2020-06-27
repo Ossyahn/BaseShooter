@@ -11,6 +11,7 @@
 #include "../Weapons/Gun.h"
 #include "HealthComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "DeathCamComponent.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -22,10 +23,10 @@ AActionCharacter::AActionCharacter()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(0.45f,1.75f, 64.f));
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	DeathCameraSpawnPoint = CreateDefaultSubobject<UArrowComponent>(FName("DeathCameraTransform"));
-	DeathCameraSpawnPoint->SetupAttachment(GetCapsuleComponent());
-	DeathCameraSpawnPoint->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
-	DeathCameraSpawnPoint->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+	DeathCam = CreateDefaultSubobject<UDeathCamComponent>(FName("DeathCam"));
+	DeathCam->SetupAttachment(GetCapsuleComponent());
+	DeathCam->SetRelativeLocation(FVector(-285.f, 0.f, 280.f));
+	DeathCam->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("FirstPersonMesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);
@@ -84,16 +85,7 @@ void AActionCharacter::OnDeath()
 
 	// TODO: Move DeathCam logic to a component
 	auto PlayerController = GetController<APlayerController>();
-	if (PlayerController) 
-	{
-		auto DeathCamera = GetWorld()->SpawnActor<ACameraActor>(
-			DeathCameraSpawnPoint->GetComponentLocation(), 
-			DeathCameraSpawnPoint->GetComponentRotation()
-		);
-
-		PlayerController->SetViewTargetWithBlend(
-			DeathCamera, BlendTime, BlendFunction, BlendExponent);
-	}
+	DeathCam->ExecuteDeathCam(PlayerController);
 		
 	Controller->UnPossess();
 }
