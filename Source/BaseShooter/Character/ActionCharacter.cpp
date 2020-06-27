@@ -83,10 +83,11 @@ void AActionCharacter::OnDeath()
 	
 	if (!Controller) return;
 
-	// TODO: Move DeathCam logic to a component
 	auto PlayerController = GetController<APlayerController>();
 	DeathCam->ExecuteDeathCam(PlayerController);
-		
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	Controller->UnPossess();
 }
 
