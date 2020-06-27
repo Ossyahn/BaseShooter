@@ -48,8 +48,6 @@ AActionCharacter::AActionCharacter()
 
 void AActionCharacter::PullTrigger()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tried to fire"));
-
 	if (Gun) {
 		Gun->Fire();
 	}
