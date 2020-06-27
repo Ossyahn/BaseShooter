@@ -5,10 +5,11 @@
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraActor.h"
 #include "Camera/PlayerCameraManager.h"
+#include "Math/Color.h"
 
 UDeathCamComponent::UDeathCamComponent()
 {
-	ArrowColor = FColor::Blue;
+	ArrowColor = FColor().FromHex("3B66B5FF");
 	bHiddenInGame = true;
 }
 
