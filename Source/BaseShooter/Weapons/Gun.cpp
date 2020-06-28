@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
 #include "TimerManager.h"
+#include "Engine/World.h"
 
 
 // Sets default values
@@ -21,16 +22,15 @@ AGun::AGun()
 
 	RootComponent = SkeletalMesh;
 
-	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	MuzzleLocation->SetupAttachment(SkeletalMesh);
-	MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));	
+	MuzzleComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	MuzzleComponent->SetupAttachment(SkeletalMesh);
+	MuzzleComponent->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));	
 }
 
-void AGun::Fire()
+void AGun::Fire(FVector InTargetLocation)
 {
-
 	if (!ProjectileClass) return;
-	
+
 	// try and play the sound if specified
 	if (FireSound != NULL)
 	{
@@ -47,7 +47,8 @@ void AGun::Fire()
 	{
 		ThirdPersonAnimInstance->Montage_Play(ThirdPersonFireAnimation, 1.f);
 	}
-
+	
+	TargetLocation = InTargetLocation;
 	// Delay to allow the animation system to reset before spawning next shot
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AGun::SpawnProjectile, 0.01f, false);
@@ -58,17 +59,18 @@ void AGun::SpawnProjectile()
 	UWorld* const World = GetWorld();
 	if (World != NULL)
 	{
-		const FRotator SpawnRotation = MuzzleLocation->GetComponentRotation();
+		const FRotator SpawnRotation = MuzzleComponent->GetComponentRotation();
 		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-		const FVector SpawnLocation = MuzzleLocation->GetComponentLocation();
+		const FVector MuzzleLocation = MuzzleComponent->GetComponentLocation();
 
 		// Set Spawn Collision Handling Override
 		FActorSpawnParameters ActorSpawnParams;
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
+		FRotator CorrectedSpawnRotation = (TargetLocation - MuzzleLocation).Rotation();
 		// TODO: Fix collision with player own capsule 
 		// Spawn the projectile at the muzzle
-		World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, CorrectedSpawnRotation, ActorSpawnParams);
 	}
 }
 

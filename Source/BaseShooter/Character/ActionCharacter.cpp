@@ -12,6 +12,7 @@
 #include "HealthComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "DeathCamComponent.h"
+#include "AIController.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -48,9 +49,52 @@ AActionCharacter::AActionCharacter()
 
 void AActionCharacter::PullTrigger()
 {
-	if (Gun) {
-		Gun->Fire();
+	if (!Gun) return;
+
+	FVector TargetLocation;
+
+	auto PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Player aim updated"));
+
+		int32 ScreenSizeX;
+		int32 ScreenSizeY;
+		FVector AimOrigin;
+		FVector AimDirection;
+
+		FVector2D ReticuleAlignment = Gun->ReticuleCenterScreenAlignment;
+
+		PlayerController->GetViewportSize(ScreenSizeX, ScreenSizeY);
+		PlayerController->DeprojectScreenPositionToWorld(
+			ScreenSizeX * ReticuleAlignment.X,
+			ScreenSizeY * ReticuleAlignment.Y,
+			AimOrigin,
+			AimDirection
+		);
+
+		FHitResult Hit;
+		FVector LineEnd = AimOrigin + (AimDirection * Gun->TraceDistance);
+
+		bool bHit = GetWorld()->LineTraceSingleByChannel(
+			Hit,
+			AimOrigin,
+			LineEnd,
+			ECollisionChannel::ECC_Visibility
+		);
+		TargetLocation = bHit ? Hit.ImpactPoint : LineEnd;
 	}
+	else
+	{
+		auto AIController = GetController<AAIController>();
+		if (!AIController) return;
+		AActor* FocusActor = AIController->GetFocusActor();
+		
+		if (!FocusActor) return;
+		TargetLocation = FocusActor->GetTargetLocation();
+	}
+	
+	Gun->Fire(TargetLocation);	
 }
 
 void AActionCharacter::BeginPlay()

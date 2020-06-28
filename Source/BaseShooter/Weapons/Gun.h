@@ -17,7 +17,7 @@ class BASESHOOTER_API AGun : public AActor
 
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* MuzzleLocation;
+	class USceneComponent* MuzzleComponent;
 		
 
 public:
@@ -27,29 +27,37 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectile> ProjectileClass;
 
+	/** Alignment of the center of the reticule in screen size proportion (0.5 is middle) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reticule")
+	FVector2D ReticuleCenterScreenAlignment = FVector2D(0.5f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reticule")
+		float TraceDistance = 10000.f;
+
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	class UAnimMontage* FirstPersonFireAnimation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	class UAnimMontage* ThirdPersonFireAnimation;
 
 	/* AnimInstance of whatever holds the gun to be animated when firing*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	class UAnimInstance* FirstPersonAnimInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	class UAnimInstance* ThirdPersonAnimInstance;
 
 	/** Fires a projectile. */
 	UFUNCTION(BlueprintCallable)
-	void Fire();
-
+	void Fire(FVector TargetLocation);
+	
 private:
 	void SpawnProjectile();
-
+	
+	FVector TargetLocation;
 };
