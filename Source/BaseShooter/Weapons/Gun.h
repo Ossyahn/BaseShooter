@@ -49,4 +49,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
+private:
+	void SpawnProjectile();
+
 };

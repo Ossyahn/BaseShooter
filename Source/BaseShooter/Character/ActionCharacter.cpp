@@ -40,6 +40,9 @@ AActionCharacter::AActionCharacter()
 	ThirdPersonMesh->SetOwnerNoSee(true);
 	ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());	
 
+	GunChildActor = CreateDefaultSubobject<UChildActorComponent>(FName("Gun"));
+	GunChildActor->SetupAttachment(ThirdPersonMesh, FName("GripPoint"));
+		
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(FName("Health"));
 }
 
@@ -50,31 +53,13 @@ void AActionCharacter::PullTrigger()
 	}
 }
 
-// Called when the game starts or when spawned
 void AActionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitGun();
+
 	HealthComponent->OnNoHealth.AddDynamic(this, &AActionCharacter::OnDeath);
-
-	//TODO: have weapon previously spawned instead that on begin play
-	if (!GunBlueprint) return;
-
-	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
-
-	if (IsPlayerControlled()) 
-	{
-		Gun->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
-	}
-	else 
-	{
-		Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
-
-	}
-
-	Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
-	Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();
-		
 }
 
 void AActionCharacter::OnDeath()
@@ -91,13 +76,20 @@ void AActionCharacter::OnDeath()
 	Controller->UnPossess();
 }
 
+void AActionCharacter::InitGun()
+{
+	Gun = Cast<AGun>(GunChildActor->GetChildActor());
+	if (!Gun) return;
+	
+	Gun->FirstPersonAnimInstance = FirstPersonMesh->GetAnimInstance();
+	Gun->ThirdPersonAnimInstance = GetMesh()->GetAnimInstance();	
+}
+
 void AActionCharacter::UnPossessed()
 {
 	Super::UnPossessed();
-
-	if (!Gun) return;
-
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
+	
+	GunChildActor->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
 }
 
 void AActionCharacter::PossessedBy(AController* NewController)
@@ -110,6 +102,11 @@ void AActionCharacter::PossessedBy(AController* NewController)
 	{
 		PlayerController->bAutoManageActiveCameraTarget = false;
 		PlayerController->SetViewTarget(this);
+
+		GunChildActor->AttachToComponent(FirstPersonMesh, 
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), 
+			FName("GripPoint")
+		);
 	}
 }
 

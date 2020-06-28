@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
+#include "TimerManager.h"
 
 
 // Sets default values
@@ -27,26 +28,9 @@ AGun::AGun()
 
 void AGun::Fire()
 {
-	// try and fire a projectile
-	if (ProjectileClass != NULL)
-	{
-		UWorld* const World = GetWorld();
-		if (World != NULL)
-		{
-			const FRotator SpawnRotation = MuzzleLocation->GetComponentRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = MuzzleLocation->GetComponentLocation();
 
-			// Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			// TODO: Fix collision with player own capsule 
-			// Spawn the projectile at the muzzle
-			World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
-	}
-
+	if (!ProjectileClass) return;
+	
 	// try and play the sound if specified
 	if (FireSound != NULL)
 	{
@@ -62,6 +46,29 @@ void AGun::Fire()
 	if (ThirdPersonFireAnimation != NULL && ThirdPersonAnimInstance != NULL)
 	{
 		ThirdPersonAnimInstance->Montage_Play(ThirdPersonFireAnimation, 1.f);
+	}
+
+	// Delay to allow the animation system to reset before spawning next shot
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AGun::SpawnProjectile, 0.01f, false);
+}
+
+void AGun::SpawnProjectile()
+{
+	UWorld* const World = GetWorld();
+	if (World != NULL)
+	{
+		const FRotator SpawnRotation = MuzzleLocation->GetComponentRotation();
+		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		const FVector SpawnLocation = MuzzleLocation->GetComponentLocation();
+
+		// Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// TODO: Fix collision with player own capsule 
+		// Spawn the projectile at the muzzle
+		World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 	}
 }
 
