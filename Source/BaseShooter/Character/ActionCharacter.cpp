@@ -48,9 +48,33 @@ AActionCharacter::AActionCharacter()
 
 void AActionCharacter::PullTrigger()
 {
-	if (Gun) {
-		Gun->Fire();
+	if (!Gun) return;
+
+	FVector AimPointOrigin;
+	FVector AimPointDirection;
+	auto PlayerController = GetController<APlayerController>();
+	
+	if (PlayerController)
+	{
+		FVector2D ReticuleAlignment = Gun->ReticuleCenterScreenAlignment;
+		int32 ScreenSizeX;
+		int32 ScreenSizeY;
+
+		PlayerController->GetViewportSize(ScreenSizeX, ScreenSizeY);
+		PlayerController->DeprojectScreenPositionToWorld(
+			ScreenSizeX*ReticuleAlignment.X,
+			ScreenSizeY*ReticuleAlignment.Y,
+			AimPointOrigin,
+			AimPointDirection
+		);
 	}
+	else
+	{
+		AimPointOrigin = FVector::ForwardVector;
+		AimPointDirection = FVector::ForwardVector;
+	}
+
+	Gun->Fire(AimPointOrigin, AimPointDirection);	
 }
 
 void AActionCharacter::BeginPlay()
