@@ -54,16 +54,10 @@ public:
 
 	/** Fires a projectile. */
 	UFUNCTION(BlueprintCallable)
-	void Fire(AController* Controller);
+	void Fire(FVector TargetLocation);
 	
 private:
 	void SpawnProjectile();
-	void UpdateAim(AController* Controller);
-
-	/** Returns the rotation needed to land a projectile from the muzzle
-	to where the reticule collides with the world in a line trace*/
-	FRotator GetMuzzleToAimPointRotation(FVector MuzzleLocation);
-
-	FVector AimOrigin;
-	FVector AimDirection;
+	
+	FVector TargetLocation;
 };
