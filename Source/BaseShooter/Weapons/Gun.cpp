@@ -27,11 +27,12 @@ AGun::AGun()
 	MuzzleComponent->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));	
 }
 
-void AGun::Fire(FVector CharacterAimOrigin, FVector CharacterAimDirection)
+void AGun::Fire(AController* Controller)
 {
-
 	if (!ProjectileClass) return;
-	
+
+	UpdateAim(Controller);
+
 	// try and play the sound if specified
 	if (FireSound != NULL)
 	{
@@ -48,10 +49,7 @@ void AGun::Fire(FVector CharacterAimOrigin, FVector CharacterAimDirection)
 	{
 		ThirdPersonAnimInstance->Montage_Play(ThirdPersonFireAnimation, 1.f);
 	}
-
-	AimOrigin = CharacterAimOrigin;
-	AimDirection = CharacterAimDirection;
-
+	
 	// Delay to allow the animation system to reset before spawning next shot
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AGun::SpawnProjectile, 0.01f, false);
@@ -74,6 +72,34 @@ void AGun::SpawnProjectile()
 		// TODO: Fix collision with player own capsule 
 		// Spawn the projectile at the muzzle
 		World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, CorrectedSpawnRotation, ActorSpawnParams);
+	}
+}
+
+void AGun::UpdateAim(AController* Controller)
+{
+	if (!ensureMsgf(Controller, TEXT("[%s] Was given a bad controller in Fire function"), *GetName())) return;
+		
+	auto PlayerController = Cast<APlayerController>(Controller);
+
+	if (PlayerController)
+	{		
+		//UE_LOG(LogTemp, Warning, TEXT("Player aim updated"));
+
+		int32 ScreenSizeX;
+		int32 ScreenSizeY;
+
+		PlayerController->GetViewportSize(ScreenSizeX, ScreenSizeY);
+		PlayerController->DeprojectScreenPositionToWorld(
+			ScreenSizeX * ReticuleCenterScreenAlignment.X,
+			ScreenSizeY * ReticuleCenterScreenAlignment.Y,
+			AimOrigin,
+			AimDirection
+		);
+	}
+	else
+	{
+		AimOrigin = FVector::ForwardVector;
+		AimDirection = FVector::ForwardVector;
 	}
 }
 
